@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.util.Date;
 
 public class MainModel {
-    private ObservableList<Task> taskList = FXCollections.observableArrayList();
 
     public MainModel(){
         /*
@@ -25,9 +24,5 @@ public class MainModel {
             taskList.add(arrayTaskList.getTask(i));
         }
         */
-    }
-
-    public ObservableList<Task> getTaskList(){
-        return taskList;
     }
 }

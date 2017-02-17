@@ -1,6 +1,6 @@
 package ua.sumdu.j2se.kryshtop.tasks;
 
-import java.util.Date;
+import java.util.Optional;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -8,24 +8,18 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
+import javafx.stage.WindowEvent;
 import ua.sumdu.j2se.kryshtop.tasks.model.Task;
 
 public class MainApp extends Application {
 
-    public static Stage primaryStage;
+    private static ObservableList<Task> taskData = FXCollections.observableArrayList();
 
-    private ObservableList<Task> taskList = FXCollections.observableArrayList();
-
-    public MainApp() {
-        //for test
-        taskList.add(new Task("Title", new Date()));
-        taskList.add(new Task("Title2", new Date()));
-        //for test
-
-        //TODO: reading from file and adding to observableTaskList
-    }
+    private static Stage primaryStage;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -35,11 +29,41 @@ public class MainApp extends Application {
         stage.setScene(scene);
         stage.setResizable(false);
 
+        stage.setOnCloseRequest((WindowEvent event) -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmation Dialog");
+            alert.setHeaderText("");
+            alert.setContentText("Are you really wont to exit?");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() != ButtonType.OK){
+                event.consume();
+            }
+        });
+
         primaryStage = stage;
         primaryStage.show();
     }
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    @Override
+    public void stop(){
+        //TODO: save data from collection into file
+    }
+
+    @Override
+    public void init(){
+        //TODO: read from file to collection
+    }
+
+    public static ObservableList<Task> getTaskData() {
+        return taskData;
+    }
+
+    public static Stage getPrimaryStage() {
+        return primaryStage;
     }
 }

@@ -6,36 +6,44 @@
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.Pane?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="349.0" prefWidth="398.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.sumdu.j2se.kryshtop.tasks.controller.AddEditController">
    <children>
       <Label layoutX="158.0" layoutY="14.0" prefHeight="17.0" prefWidth="90.0" text="Edit / Add task" wrapText="true" />
       <Label layoutX="14.0" layoutY="39.0" text="Title" wrapText="true" />
-      <DatePicker layoutX="16.0" layoutY="228.0" />
-      <DatePicker layoutX="16.0" layoutY="180.0" prefHeight="25.0" prefWidth="174.0" />
+      <DatePicker fx:id="endDatePicker" layoutX="16.0" layoutY="228.0" prefHeight="25.0" prefWidth="99.0" />
+      <DatePicker fx:id="startDatePicker" layoutX="16.0" layoutY="180.0" prefHeight="25.0" prefWidth="99.0" />
       <Button fx:id="okButton" layoutX="179.0" layoutY="315.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="83.0" text="OK" />
       <Button fx:id="cancelButton" layoutX="271.0" layoutY="315.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="83.0" text="Cancel" />
-      <TextField layoutX="14.0" layoutY="56.0" prefHeight="25.0" prefWidth="377.0" />
-      <RadioButton layoutX="12.0" layoutY="98.0" mnemonicParsing="false" text="Active" />
-      <RadioButton layoutX="87.0" layoutY="98.0" mnemonicParsing="false" text="Unactive" />
+      <TextField fx:id="title" layoutX="14.0" layoutY="56.0" prefHeight="25.0" prefWidth="377.0" />
+      <RadioButton fx:id="activeRadioButton" layoutX="12.0" layoutY="98.0" mnemonicParsing="false" selected="true" text="Active">
+         <toggleGroup>
+            <ToggleGroup fx:id="activity" />
+         </toggleGroup></RadioButton>
+      <RadioButton fx:id="inActiveRadioButton" layoutX="87.0" layoutY="98.0" mnemonicParsing="false" text="Inactive" toggleGroup="$activity" />
       <Label layoutX="17.0" layoutY="163.0" prefHeight="17.0" prefWidth="35.0" text="Start" />
       <Label layoutX="17.0" layoutY="211.0" prefHeight="17.0" prefWidth="35.0" text="End" />
-      <DatePicker layoutX="215.0" layoutY="180.0" prefHeight="25.0" prefWidth="174.0" />
+      <DatePicker fx:id="timeDatePicker" layoutX="215.0" layoutY="180.0" prefHeight="25.0" prefWidth="92.0" />
       <Label layoutX="215.0" layoutY="163.0" prefHeight="17.0" prefWidth="35.0" text="Time" />
-      <RadioButton layoutX="14.0" layoutY="138.0" mnemonicParsing="false" text="Repeatable" />
-      <RadioButton layoutX="213.0" layoutY="138.0" mnemonicParsing="false" text="Unrepeatable" />
+      <RadioButton fx:id="repeatebleRadioButton" layoutX="14.0" layoutY="138.0" mnemonicParsing="false" selected="true" text="Repeatable">
+         <toggleGroup>
+            <ToggleGroup fx:id="repeat" />
+         </toggleGroup></RadioButton>
+      <RadioButton fx:id="unRepeatebleRadioButton" layoutX="213.0" layoutY="138.0" mnemonicParsing="false" text="Unrepeatable" toggleGroup="$repeat" />
       <Label layoutX="78.0" layoutY="259.0" prefHeight="17.0" prefWidth="67.0" text="Interval" />
       <Label layoutX="43.0" layoutY="280.0" text="days" />
       <Separator layoutX="201.0" layoutY="134.0" orientation="VERTICAL" prefHeight="174.0" prefWidth="1.0" />
-      <TextField layoutX="12.0" layoutY="276.0" prefHeight="25.0" prefWidth="30.0" />
+      <TextField fx:id="intervalDays" layoutX="12.0" layoutY="276.0" prefHeight="25.0" prefWidth="30.0" />
       <Label layoutX="109.0" layoutY="280.0" prefHeight="17.0" prefWidth="30.0" text="hours" />
-      <TextField layoutX="73.0" layoutY="276.0" prefHeight="25.0" prefWidth="35.0" />
+      <TextField fx:id="intervalHours" layoutX="73.0" layoutY="276.0" prefHeight="25.0" prefWidth="35.0" />
       <Label layoutX="173.0" layoutY="280.0" text="min" />
-      <TextField layoutX="142.0" layoutY="276.0" prefHeight="25.0" prefWidth="30.0" />
+      <TextField fx:id="intervalMinutes" layoutX="142.0" layoutY="276.0" prefHeight="25.0" prefWidth="30.0" />
       <Label alignment="TOP_LEFT" layoutX="14.0" layoutY="81.0" prefHeight="17.0" prefWidth="53.0" text="Activity" />
       <Label layoutX="13.0" layoutY="118.0" text="Repeat" />
-      <ToggleButton layoutX="188.0" layoutY="94.0" mnemonicParsing="false" text="ToggleButton" />
+      <DatePicker fx:id="startTimePicker" layoutX="119.0" layoutY="180.0" prefHeight="25.0" prefWidth="80.0" />
+      <DatePicker fx:id="timeTimePicker" layoutX="311.0" layoutY="180.0" prefHeight="25.0" prefWidth="80.0" />
+      <DatePicker fx:id="enTimePicker" layoutX="119.0" layoutY="228.0" prefHeight="25.0" prefWidth="80.0" />
    </children>
 </Pane>

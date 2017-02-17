@@ -9,17 +9,18 @@
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="427.0" prefWidth="769.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.sumdu.j2se.kryshtop.tasks.controller.MainController">
    <children>
       <Label layoutX="7.0" layoutY="14.0" text="Tasks:" wrapText="true" />
-      <Button fx:id="exitButton" layoutX="679.0" layoutY="395.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="83.0" text="Exit" />
       <TableView fx:id="mainTable" layoutX="8.0" layoutY="39.0" prefHeight="350.0" prefWidth="754.0">
         <columns>
-          <TableColumn prefWidth="20.0" text="A" />
-          <TableColumn prefWidth="239.00001525878906" text="Title" />
-            <TableColumn prefWidth="166.0" text="(Start) Time" />
-            <TableColumn prefWidth="147.0" text="End time" />
-            <TableColumn prefWidth="115.0" text="Interval" />
+          <TableColumn fx:id="activityColumn" prefWidth="20.0" text="A" />
+          <TableColumn fx:id="titleColumn" prefWidth="289.0" text="Title" />
+            <TableColumn fx:id="startTimeColumn" prefWidth="165.0" text="(Start) Time" />
+            <TableColumn fx:id="endTimeColumn" prefWidth="146.0" text="End time" />
+            <TableColumn fx:id="intervalColumn" prefWidth="133.0" text="Interval" />
         </columns>
       </TableView>
-      <Button fx:id="addNewTaskButton" layoutX="602.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="160.0" text="Add new task" />
-      <Button fx:id="calendarButton" layoutX="7.0" layoutY="395.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="131.0" text="Calendar" />
+      <Button fx:id="addNewTaskButton" layoutX="8.0" layoutY="395.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="160.0" text="Add new task" />
+      <Button fx:id="calendarButton" layoutX="631.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="131.0" text="Calendar" />
+      <Button fx:id="deleteButton" layoutX="710.0" layoutY="395.0" mnemonicParsing="false" text="Delete" />
+      <Button fx:id="editButton" layoutX="652.0" layoutY="395.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="Edit" />
    </children>
 </Pane>
