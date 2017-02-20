@@ -178,9 +178,8 @@ public class AddEditController {
                 alert.setContentText("You must enter a title!");
 
                 alert.showAndWait();
-            } /* //TODO: comparing start time and end time
-            else if (Integer.parseInt(startDatePicker.getEditor().getText() + "") ==
-                    Integer.parseInt(endDatePicker.getEditor().getText() + "") &&
+            }
+            else if ((startDatePicker.getValue().compareTo(endDatePicker.getValue()) == 0) &&
                     ((Integer.parseInt(startHoursSpinner.getEditor().getText() + "") >
                             Integer.parseInt(endHoursSpinner.getEditor().getText() + "")) ||
                             (Integer.parseInt(startHoursSpinner.getEditor().getText() + "") ==
@@ -190,8 +189,10 @@ public class AddEditController {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Information Dialog");
                 alert.setHeaderText(null);
-                alert.setContentText("End time cant be earlier then start time!");
-            } */ else {
+                alert.setContentText("End time can not be earlier than or equal to the start time!");
+
+                alert.showAndWait();
+            } else {
 
                 Task task;
                 final int day = 86400;

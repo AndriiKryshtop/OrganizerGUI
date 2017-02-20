@@ -84,9 +84,17 @@ public class MainController {
                     stage.setScene(scene);
                     stage.setResizable(false);
                     stage.show();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    //TODO: add some logic - giving an error massage and print to log
+                } catch (IOException exception) {
+                    exception.printStackTrace();
+
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Exception Dialog");
+                    alert.setHeaderText("Error!");
+                    alert.setContentText("Could not find file Calendar.fxml! \n You can watch details in log.");
+
+                    alert.showAndWait();
+                    //TODO: print to log
+                    MainApp.getPrimaryStage().close();
                 }
 
                 MainApp.getPrimaryStage().close();
@@ -115,7 +123,15 @@ public class MainController {
                     stage.show();
                 } catch (IOException exception) {
                     exception.printStackTrace();
-                    //TODO: add some logic - giving an error massage and print to log
+
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Exception Dialog");
+                    alert.setHeaderText("Error!");
+                    alert.setContentText("Could not find file AddEdit.fxml! \n You can watch details in log.");
+
+                    alert.showAndWait();
+                    //TODO: print to log
+                    MainApp.getPrimaryStage().close();
                 }
 
                 MainApp.getPrimaryStage().close();
@@ -145,9 +161,17 @@ public class MainController {
                         stage.setScene(scene);
                         stage.setResizable(false);
                         stage.show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        //TODO: add some logic - giving an error massage and print to log
+                    } catch (IOException exception) {
+                        exception.printStackTrace();
+
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Exception Dialog");
+                        alert.setHeaderText("Error!");
+                        alert.setContentText("Could not find file AddEdit.fxml! \n You can watch details in log.");
+
+                        alert.showAndWait();
+                        //TODO: print to log
+                        MainApp.getPrimaryStage().close();
                     }
 
                     MainApp.getPrimaryStage().close();
