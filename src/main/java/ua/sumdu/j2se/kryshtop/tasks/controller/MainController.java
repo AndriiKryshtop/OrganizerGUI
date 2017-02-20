@@ -1,6 +1,7 @@
 package ua.sumdu.j2se.kryshtop.tasks.controller;
 
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -50,58 +51,60 @@ public class MainController {
     private TableColumn<Task, String> intervalColumn;
 
     @FXML
-    public void initialize(){
+    public void initialize() {
         initData();
 
-        activityColumn.setCellValueFactory(c -> new SimpleBooleanProperty(c.getValue().isActive()));
-        activityColumn.setCellFactory(tc -> new CheckBoxTableCell<>());
+        activityColumn.setCellValueFactory(callback -> new SimpleBooleanProperty(callback.getValue().isActive()));
+        activityColumn.setCellFactory(tableCell -> new CheckBoxTableCell<>());
 
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         startTimeColumn.setCellValueFactory(new PropertyValueFactory<>("startTime"));
         endTimeColumn.setCellValueFactory(new PropertyValueFactory<>("endTime"));
-        intervalColumn.setCellValueFactory(new PropertyValueFactory<>("repeatInterval"));
+
+        intervalColumn.setCellValueFactory(callback -> new SimpleStringProperty(callback.getValue().getRepeatIntervalString()));
 
         mainTable.setItems(MainApp.getTaskData());
 
         calendarButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    try{
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/Calendar.fxml"));
-                        Parent root = fxmlLoader.load();
-                        Scene scene = new Scene(root, 712, 405);
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                try {
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/Calendar.fxml"));
+                    Parent root = fxmlLoader.load();
+                    Scene scene = new Scene(root, 712, 405);
 
-                        Stage stage = new Stage();
+                    Stage stage = new Stage();
 
-                        stage.setOnCloseRequest(we -> {
-                                stage.close();
-                                MainApp.getPrimaryStage().show();
-                        });
+                    stage.setOnCloseRequest(we -> {
+                        stage.close();
+                        MainApp.getPrimaryStage().show();
+                    });
 
-                        stage.setTitle("Calendar");
-                        stage.setScene(scene);
-                        stage.setResizable(false);
-                        stage.show();
-                    } catch(IOException e){
-                        e.printStackTrace();
-                        //TODO: add some logic - giving an error massage and print to log
-                    }
-
-                    MainApp.getPrimaryStage().close();
+                    stage.setTitle("Calendar");
+                    stage.setScene(scene);
+                    stage.setResizable(false);
+                    stage.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    //TODO: add some logic - giving an error massage and print to log
                 }
+
+                MainApp.getPrimaryStage().close();
+            }
         });
 
         addNewTaskButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                try{
+                AddEditController.taskId = -1;
+                try {
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/AddEdit.fxml"));
                     Parent root = fxmlLoader.load();
-                    Scene scene = new Scene(root, 386, 334);
+                    Scene scene = new Scene(root, 480, 334);
 
                     Stage stage = new Stage();
 
-                    stage.setOnCloseRequest(we -> {
+                    stage.setOnCloseRequest(windowEvent -> {
                         stage.close();
                         MainApp.getPrimaryStage().show();
                     });
@@ -110,8 +113,8 @@ public class MainController {
                     stage.setScene(scene);
                     stage.setResizable(false);
                     stage.show();
-                } catch(IOException e){
-                    e.printStackTrace();
+                } catch (IOException exception) {
+                    exception.printStackTrace();
                     //TODO: add some logic - giving an error massage and print to log
                 }
 
@@ -119,50 +122,59 @@ public class MainController {
             }
         });
 
-        editButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>(){
+        editButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-
-                try{
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/AddEdit.fxml"));
-                    Parent root = fxmlLoader.load();
-                    Scene scene = new Scene(root, 386, 334);
-
-                    Stage stage = new Stage();
-
+                if (mainTable.getSelectionModel().getSelectedIndex() != -1) {
                     AddEditController.taskId = mainTable.getSelectionModel().getSelectedIndex();
+                    try {
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/AddEdit.fxml"));
+                        Parent root = fxmlLoader.load();
+                        Scene scene = new Scene(root, 480, 334);
 
-                    stage.setOnCloseRequest(we -> {
-                        stage.close();
-                        MainApp.getPrimaryStage().show();
-                    });
+                        Stage stage = new Stage();
 
-                    stage.setTitle("Edit task");
-                    stage.setScene(scene);
-                    stage.setResizable(false);
-                    stage.show();
-                } catch(IOException e){
-                    e.printStackTrace();
-                    //TODO: add some logic - giving an error massage and print to log
+                        AddEditController.taskId = mainTable.getSelectionModel().getSelectedIndex();
+
+                        stage.setOnCloseRequest(we -> {
+                            stage.close();
+                            MainApp.getPrimaryStage().show();
+                        });
+
+                        stage.setTitle("Edit task");
+                        stage.setScene(scene);
+                        stage.setResizable(false);
+                        stage.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        //TODO: add some logic - giving an error massage and print to log
+                    }
+
+                    MainApp.getPrimaryStage().close();
+                } else {
+                    chooseTaskDialog("edit");
                 }
 
-                MainApp.getPrimaryStage().close();
             }
         });
 
         deleteButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Delete task");
-            alert.setHeaderText("Are you really wont to delete this task?");
-            alert.setContentText(
-                    MainApp.getTaskData().get(
-                            mainTable.getSelectionModel().getSelectedIndex()
-                    ).toString()
-            );
+            if (mainTable.getSelectionModel().getSelectedIndex() != -1) {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Delete task");
+                alert.setHeaderText("Are you really wont to delete this task?");
+                alert.setContentText(
+                        MainApp.getTaskData().get(
+                                mainTable.getSelectionModel().getSelectedIndex()
+                        ).toString()
+                );
 
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK){
-                MainApp.getTaskData().remove(mainTable.getSelectionModel().getSelectedIndex());
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    MainApp.getTaskData().remove(mainTable.getSelectionModel().getSelectedIndex());
+                }
+            } else {
+                chooseTaskDialog("delete");
             }
         });
     }
@@ -177,5 +189,14 @@ public class MainController {
         MainApp.getTaskData().add(task);
         MainApp.getTaskData().add(new Task("Title3", new Date(), new Date(), 100));
         //for test
+    }
+
+    private void chooseTaskDialog(String button) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information Dialog");
+        alert.setHeaderText(null);
+        alert.setContentText("Choose task before pressing \"" + button + "\" button!");
+
+        alert.showAndWait();
     }
 }

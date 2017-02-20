@@ -2,23 +2,29 @@ package ua.sumdu.j2se.kryshtop.tasks.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
+import javafx.util.Callback;
 import ua.sumdu.j2se.kryshtop.tasks.MainApp;
 import ua.sumdu.j2se.kryshtop.tasks.model.Task;
+import ua.sumdu.j2se.kryshtop.tasks.util.Tasks;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 public class CalendarController {
-    private ObservableList<Task> taskData = FXCollections.observableArrayList();
+    private ObservableList<Task> calendarTaskList = FXCollections.observableArrayList();
+
+    @FXML
+    private DatePicker fromDatePicker;
+
+    @FXML
+    private DatePicker toDatePicker;
 
     @FXML
     private Button showButton;
@@ -38,7 +44,6 @@ public class CalendarController {
     @FXML
     private Label intervalLabel;
 
-
     @FXML
     private TableView<Task> calendarTable;
 
@@ -49,43 +54,70 @@ public class CalendarController {
     private TableColumn<Task, String> timeColumn;
 
     @FXML
-    public void initialize(){
-        initData();
+    public void initialize() {
+        fromDatePicker.setValue(LocalDate.now());
+        toDatePicker.setValue(fromDatePicker.getValue().plusDays(1));
+
+        final Callback<DatePicker, DateCell> dayCellFactory =
+                new Callback<DatePicker, DateCell>() {
+                    @Override
+                    public DateCell call(final DatePicker datePicker) {
+                        return new DateCell() {
+                            @Override
+                            public void updateItem(LocalDate item, boolean empty) {
+                                super.updateItem(item, empty);
+                                if (item.isBefore(
+                                        fromDatePicker.getValue().plusDays(1))
+                                        ) {
+                                    setDisable(true);
+                                    setStyle("-fx-background-color: #ffc0cb;");
+                                }
+                            }
+                        };
+                    }
+                };
+        toDatePicker.setDayCellFactory(dayCellFactory);
+        fromDatePicker.valueProperty().addListener((ov, oldValue, newValue) ->
+                toDatePicker.setValue(newValue.plusDays(1)));
+
+        formCalendarList(Date.from(fromDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                Date.from(toDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
 
-        calendarTable.setItems(taskData);
+        calendarTable.setItems(calendarTaskList);
 
         //showTaskDetails(null);
 
         calendarTable.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> showTaskDetails(newValue));
 
-        showButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-            //TODO: refresh table
-        });
+        showButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent ->
+                formCalendarList(Date.from(fromDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
+                        Date.from(toDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant())));
 
         backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             Stage stage = (Stage) backButton.getScene().getWindow();
             stage.close();
             MainApp.getPrimaryStage().show();
-       });
+        });
     }
 
-    private void initData() {
-        Task task = new Task("Title", new Date());
-        task.setActive(true);
-
-        taskData.add(new Task("Title", new Date()));
-        taskData.add(new Task("Title2", new Date()));
-        taskData.add(task);
-        taskData.add(new Task("Title3", new Date(), new Date(), 100));
+    private void formCalendarList(Date from, Date to) {
+        calendarTaskList.clear();
+        SortedMap<Date, Set<Task>> sortedMap = Tasks.calendar(MainApp.getTaskData(), from, to);
+        for (int i = 0; i < sortedMap.values().size(); i++) {
+            for (Map.Entry<Date, Set<Task>> entry : sortedMap.entrySet()) {
+                for (Object object : entry.getValue().toArray()) {
+                    calendarTaskList.add((Task) object);
+                }
+            }
+        }
     }
 
     private void showTaskDetails(Task task) {
         if (task != null) {
-            // Заполняем метки информацией из объекта task.
             titleLabel.setText(task.getTitle());
             startTimeLabel.setText(task.getStartTime().toString());
             endTimeLabel.setText(task.getEndTime().toString());

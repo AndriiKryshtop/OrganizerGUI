@@ -10,8 +10,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TaskIO {
-    public static final void write(TaskList tasks, OutputStream out) throws IOException{
-        try(DataOutputStream dataOutputStream = new DataOutputStream(out)) {
+    public static final void write(TaskList tasks, OutputStream out) throws IOException {
+        try (DataOutputStream dataOutputStream = new DataOutputStream(out)) {
             dataOutputStream.writeInt(tasks.size());
 
             for (Task task : tasks) {
@@ -19,7 +19,7 @@ public class TaskIO {
                 dataOutputStream.writeUTF(task.getTitle());
                 dataOutputStream.writeBoolean(task.isActive());
                 dataOutputStream.writeInt(task.getRepeatInterval());
-                if (task.isRepeated() == false) {
+                if (!task.isRepeated()) {
                     dataOutputStream.writeLong(task.getTime().getTime());
                 } else {
                     dataOutputStream.writeLong(task.getStartTime().getTime());
@@ -29,8 +29,8 @@ public class TaskIO {
         }
     }
 
-    public static final void read(TaskList tasks, InputStream in) throws IOException{
-        try(DataInputStream dataInputStream = new DataInputStream(in)) {
+    public static final void read(TaskList tasks, InputStream in) throws IOException {
+        try (DataInputStream dataInputStream = new DataInputStream(in)) {
             int size = dataInputStream.readInt();
             for (int i = 0; i < size; i++) {
                 Task task = new Task("", null);
@@ -54,41 +54,38 @@ public class TaskIO {
     }
 
     public static final void writeBinary(TaskList tasks, File file) throws IOException {
-        try(FileOutputStream fileOutputStream = new FileOutputStream(file);
-            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream)
-        )
-        {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(file);
+             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream)
+        ) {
             write(tasks, bufferedOutputStream);
         }
     }
 
-    public static final void readBinary(TaskList tasks, File file) throws IOException{
-        try(FileInputStream fileInputStream = new FileInputStream(file);
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream)
-        )
-        {
+    public static final void readBinary(TaskList tasks, File file) throws IOException {
+        try (FileInputStream fileInputStream = new FileInputStream(file);
+             BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream)
+        ) {
             read(tasks, bufferedInputStream);
         }
     }
 
     public static final void write(TaskList tasks, Writer out) throws IOException {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(out))
-        {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(out)) {
             int i = 0;
             for (Task task : tasks) {
                 bufferedWriter.append(task.toString());
-                bufferedWriter.append(i < tasks.size()-1 ? ";" : ".");
+                bufferedWriter.append(i < tasks.size() - 1 ? ";" : ".");
                 bufferedWriter.newLine();
                 i++;
             }
         }
     }
+
     public static final void read(TaskList tasks, Reader in) throws Exception {
-        try(BufferedReader bufferedReader = new BufferedReader(in))
-        {
+        try (BufferedReader bufferedReader = new BufferedReader(in)) {
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
-            String line ;
+            String line;
             while ((line = bufferedReader.readLine()) != null) {
                 String title = line.substring(line.indexOf('\"') + 1, line.lastIndexOf('\"'));
 
@@ -100,8 +97,7 @@ public class TaskIO {
                     Task task = new Task(title, new Date(time.getTime()));
                     task.setActive(active);
                     tasks.add(task);
-                }
-                else {
+                } else {
                     String startString = line.substring(line.indexOf("[") + 1, line.indexOf("]"));
                     Date startDate = format.parse(startString);
 
@@ -116,10 +112,10 @@ public class TaskIO {
                     Integer interval = 0;
 
                     String[] constString = {"d", "h", "m", "s"};
-                    for(int i = 0; i < intervalStringArray.length; i += 2){
+                    for (int i = 0; i < intervalStringArray.length; i += 2) {
                         for (int j = 0; j < constString.length; j++) {
-                            if (intervalStringArray[i+1].substring(0, 1).compareTo(constString[j]) == 0) {
-                                switch (j){
+                            if (intervalStringArray[i + 1].substring(0, 1).compareTo(constString[j]) == 0) {
+                                switch (j) {
                                     case 0:
                                         interval += Integer.parseInt(intervalStringArray[i]) * 86400;
                                         break;
@@ -144,20 +140,20 @@ public class TaskIO {
             }
         }
     }
+
     public static final void writeText(TaskList tasks, File file) throws IOException {
-        try(FileWriter fileWriter = new FileWriter(file);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            PrintWriter printWriter = new PrintWriter(bufferedWriter)
-        )
-        {
+        try (FileWriter fileWriter = new FileWriter(file);
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+             PrintWriter printWriter = new PrintWriter(bufferedWriter)
+        ) {
             write(tasks, printWriter);
         }
     }
+
     public static final void readText(TaskList tasks, File file) throws Exception {
-        try(FileReader fileReader = new FileReader(file);
-            BufferedReader bufferedReader = new BufferedReader(fileReader)
-        )
-        {
+        try (FileReader fileReader = new FileReader(file);
+             BufferedReader bufferedReader = new BufferedReader(fileReader)
+        ) {
             read(tasks, bufferedReader);
         }
     }

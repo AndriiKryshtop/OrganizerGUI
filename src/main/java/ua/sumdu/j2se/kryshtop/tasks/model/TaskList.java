@@ -6,7 +6,7 @@ import ua.sumdu.j2se.kryshtop.tasks.model.exceptions.NullTaskException;
 import java.io.Serializable;
 
 
-public abstract class TaskList implements Iterable<Task>, Cloneable, Serializable{
+public abstract class TaskList implements Iterable<Task>, Cloneable, Serializable {
     protected int size;
 
     public abstract void add(Task task) throws NullTaskException;
@@ -17,9 +17,10 @@ public abstract class TaskList implements Iterable<Task>, Cloneable, Serializabl
 
     /**
      * To get number of records in the task list
+     *
      * @return number of records in this task list
      */
-    public int size(){
+    public int size() {
         return size;
     }
 
@@ -32,8 +33,8 @@ public abstract class TaskList implements Iterable<Task>, Cloneable, Serializabl
 
         if (size() != tasks.size()) return false;
 
-        for (int i=0; i < size(); i++){
-            if (!getTask(i).equals(tasks.getTask(i))){
+        for (int i = 0; i < size(); i++) {
+            if (!getTask(i).equals(tasks.getTask(i))) {
                 return false;
             }
         }
@@ -46,7 +47,7 @@ public abstract class TaskList implements Iterable<Task>, Cloneable, Serializabl
         int result = 17;
         result = 37 * result + size();
 
-        for(int i=0; i < size(); i++){
+        for (int i = 0; i < size(); i++) {
             result = 37 * result + (getTask(i) == null ? 0 : getTask(i).hashCode());
         }
 

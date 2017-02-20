@@ -15,9 +15,9 @@
    <children>
       <Label layoutX="14.0" layoutY="14.0" text="Period of Time: " wrapText="true" />
       <Label layoutX="14.0" layoutY="43.0" text="from" wrapText="true" />
-      <DatePicker layoutX="50.0" layoutY="39.0" prefHeight="25.0" prefWidth="111.0" />
+      <DatePicker fx:id="fromDatePicker" layoutX="50.0" layoutY="39.0" prefHeight="25.0" prefWidth="111.0" />
       <Label layoutX="173.0" layoutY="43.0" text="to" wrapText="true" />
-      <DatePicker layoutX="191.0" layoutY="39.0" prefHeight="25.0" prefWidth="119.0" />
+      <DatePicker fx:id="toDatePicker" layoutX="191.0" layoutY="39.0" prefHeight="25.0" prefWidth="119.0" />
       <Button fx:id="showButton" layoutX="359.0" layoutY="39.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="83.0" text="Show" />
       <Button fx:id="backButton" layoutX="636.0" layoutY="384.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="83.0" text="Back" />
       <TableView fx:id="calendarTable" layoutX="14.0" layoutY="73.0" prefHeight="329.0" prefWidth="451.0">

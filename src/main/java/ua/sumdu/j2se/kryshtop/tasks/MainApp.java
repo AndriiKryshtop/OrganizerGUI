@@ -24,7 +24,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Main.fxml"));
-        Scene scene = new Scene(root, 760, 418);
+        Scene scene = new Scene(root, 880, 418);
         stage.setTitle("Organizer");
         stage.setScene(scene);
         stage.setResizable(false);
@@ -36,7 +36,7 @@ public class MainApp extends Application {
             alert.setContentText("Are you really wont to exit?");
 
             Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() != ButtonType.OK){
+            if (result.get() != ButtonType.OK) {
                 event.consume();
             }
         });
@@ -50,12 +50,12 @@ public class MainApp extends Application {
     }
 
     @Override
-    public void stop(){
+    public void stop() {
         //TODO: save data from collection into file
     }
 
     @Override
-    public void init(){
+    public void init() {
         //TODO: read from file to collection
     }
 
