@@ -10,15 +10,15 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="339.0" prefWidth="484.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.sumdu.j2se.kryshtop.tasks.controller.AddEditController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="339.0" prefWidth="505.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.sumdu.j2se.kryshtop.tasks.controller.AddEditController">
    <children>
       <Label layoutX="158.0" layoutY="14.0" prefHeight="17.0" prefWidth="90.0" text="Edit / Add task" wrapText="true" />
       <Label layoutX="14.0" layoutY="39.0" text="Title" wrapText="true" />
       <DatePicker fx:id="endDatePicker" layoutX="20.0" layoutY="228.0" prefHeight="25.0" prefWidth="106.0" />
       <DatePicker fx:id="startDatePicker" layoutX="19.0" layoutY="180.0" prefHeight="25.0" prefWidth="106.0" />
-      <Button fx:id="okButton" layoutX="299.0" layoutY="312.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="83.0" text="OK" />
-      <Button fx:id="cancelButton" layoutX="391.0" layoutY="312.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="83.0" text="Cancel" />
-      <TextField fx:id="title" layoutX="14.0" layoutY="56.0" prefHeight="25.0" prefWidth="460.0" />
+      <Button fx:id="okButton" layoutX="319.0" layoutY="313.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="83.0" text="OK" />
+      <Button fx:id="cancelButton" layoutX="411.0" layoutY="313.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="83.0" text="Cancel" />
+      <TextField fx:id="title" layoutX="14.0" layoutY="56.0" prefHeight="25.0" prefWidth="477.0" />
       <RadioButton fx:id="activeRadioButton" layoutX="12.0" layoutY="98.0" mnemonicParsing="false" selected="true" text="Active">
          <toggleGroup>
             <ToggleGroup fx:id="activity" />
@@ -26,30 +26,30 @@
       <RadioButton fx:id="inActiveRadioButton" layoutX="87.0" layoutY="98.0" mnemonicParsing="false" text="Inactive" toggleGroup="$activity" />
       <Label layoutX="17.0" layoutY="163.0" prefHeight="17.0" prefWidth="35.0" text="Start" />
       <Label layoutX="17.0" layoutY="211.0" prefHeight="17.0" prefWidth="35.0" text="End" />
-      <DatePicker fx:id="timeDatePicker" layoutX="275.0" layoutY="184.0" prefHeight="25.0" prefWidth="92.0" />
-      <Label layoutX="292.0" layoutY="167.0" prefHeight="17.0" prefWidth="35.0" text="Time" />
+      <DatePicker fx:id="timeDatePicker" layoutX="275.0" layoutY="184.0" prefHeight="25.0" prefWidth="99.0" />
+      <Label layoutX="273.0" layoutY="163.0" prefHeight="17.0" prefWidth="35.0" text="Time" />
       <RadioButton fx:id="repeatebleRadioButton" layoutX="14.0" layoutY="138.0" mnemonicParsing="false" selected="true" text="Repeatable">
          <toggleGroup>
             <ToggleGroup fx:id="repeat" />
          </toggleGroup></RadioButton>
       <RadioButton fx:id="unRepeatebleRadioButton" layoutX="290.0" layoutY="142.0" mnemonicParsing="false" text="Unrepeatable" toggleGroup="$repeat" />
       <Label layoutX="16.0" layoutY="259.0" prefHeight="17.0" prefWidth="67.0" text="Interval" />
-      <Label layoutX="128.0" layoutY="280.0" text="h" />
-      <Separator layoutX="269.0" layoutY="135.0" orientation="VERTICAL" prefHeight="174.0" prefWidth="1.0" />
+      <Label layoutX="79.0" layoutY="280.0" text="hours" />
+      <Separator layoutX="269.0" layoutY="135.0" orientation="VERTICAL" prefHeight="187.0" prefWidth="6.0" />
       <Label alignment="TOP_LEFT" layoutX="14.0" layoutY="81.0" prefHeight="17.0" prefWidth="53.0" text="Activity" />
       <Label layoutX="13.0" layoutY="118.0" text="Repeat" />
-      <Spinner fx:id="startHoursSpinner" layoutX="129.0" layoutY="180.0" prefHeight="25.0" prefWidth="53.0" />
-      <Spinner fx:id="startMinutesSpinner" layoutX="186.0" layoutY="180.0" prefHeight="25.0" prefWidth="53.0" />
-      <Spinner fx:id="endHoursSpinner" layoutX="131.0" layoutY="228.0" prefHeight="25.0" prefWidth="53.0" />
-      <Spinner fx:id="endMinutesSpinner" layoutX="188.0" layoutY="228.0" prefHeight="25.0" prefWidth="53.0" />
-      <Spinner fx:id="timeHoursSpinner" layoutX="371.0" layoutY="184.0" prefHeight="25.0" prefWidth="53.0" />
-      <Spinner fx:id="timeMinutesSpinner" layoutX="431.0" layoutY="184.0" prefHeight="25.0" prefWidth="53.0" />
-      <Spinner fx:id="hoursSpinner" layoutX="76.0" layoutY="276.0" prefHeight="25.0" prefWidth="53.0" />
-      <Label layoutX="255.0" layoutY="280.0" prefHeight="17.0" prefWidth="7.0" text="s" />
-      <Spinner fx:id="secondsSpinner" layoutX="201.0" layoutY="276.0" prefHeight="25.0" prefWidth="53.0" />
-      <Label layoutX="193.0" layoutY="280.0" text="m" />
-      <Spinner fx:id="minutesSpinner" layoutX="137.0" layoutY="276.0" prefHeight="25.0" prefWidth="53.0" />
-      <Label layoutX="66.0" layoutY="280.0" text="d" />
-      <Spinner fx:id="daysSpinner" layoutX="14.0" layoutY="276.0" prefHeight="25.0" prefWidth="53.0" />
+      <Spinner fx:id="startHoursSpinner" editable="true" layoutX="129.0" layoutY="180.0" prefHeight="25.0" prefWidth="67.0" />
+      <Spinner fx:id="startMinutesSpinner" editable="true" layoutX="201.0" layoutY="180.0" prefHeight="25.0" prefWidth="67.0" />
+      <Spinner fx:id="endHoursSpinner" editable="true" layoutX="131.0" layoutY="228.0" prefHeight="25.0" prefWidth="67.0" />
+      <Spinner fx:id="endMinutesSpinner" editable="true" layoutX="202.0" layoutY="228.0" prefHeight="25.0" prefWidth="67.0" />
+      <Spinner fx:id="timeHoursSpinner" editable="true" layoutX="375.0" layoutY="184.0" prefHeight="25.0" prefWidth="62.0" />
+      <Spinner fx:id="timeMinutesSpinner" editable="true" layoutX="443.0" layoutY="184.0" prefHeight="25.0" prefWidth="62.0" />
+      <Spinner fx:id="hoursSpinner" editable="true" layoutX="77.0" layoutY="297.0" prefHeight="25.0" prefWidth="53.0" />
+      <Label layoutX="202.0" layoutY="280.0" prefHeight="17.0" prefWidth="53.0" text="seconds" />
+      <Spinner fx:id="secondsSpinner" editable="true" layoutX="202.0" layoutY="297.0" prefHeight="25.0" prefWidth="53.0" />
+      <Label layoutX="143.0" layoutY="280.0" text="minutes" />
+      <Spinner fx:id="minutesSpinner" editable="true" layoutX="138.0" layoutY="297.0" prefHeight="25.0" prefWidth="53.0" />
+      <Label layoutX="19.0" layoutY="280.0" text="days" />
+      <Spinner fx:id="daysSpinner" editable="true" layoutX="15.0" layoutY="297.0" prefHeight="25.0" prefWidth="53.0" />
    </children>
 </Pane>

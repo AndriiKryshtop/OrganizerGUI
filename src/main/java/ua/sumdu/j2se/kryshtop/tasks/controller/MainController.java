@@ -52,8 +52,6 @@ public class MainController {
 
     @FXML
     public void initialize() {
-        initData();
-
         activityColumn.setCellValueFactory(callback -> new SimpleBooleanProperty(callback.getValue().isActive()));
         activityColumn.setCellFactory(tableCell -> new CheckBoxTableCell<>());
 
@@ -201,18 +199,6 @@ public class MainController {
                 chooseTaskDialog("delete");
             }
         });
-    }
-
-    private void initData() {
-        //for test
-        Task task = new Task("Title", new Date());
-        task.setActive(true);
-
-        MainApp.getTaskData().add(new Task("Task that gone be deleted", new Date()));
-        MainApp.getTaskData().add(new Task("Title2", new Date()));
-        MainApp.getTaskData().add(task);
-        MainApp.getTaskData().add(new Task("Title3", new Date(), new Date(), 100));
-        //for test
     }
 
     private void chooseTaskDialog(String button) {

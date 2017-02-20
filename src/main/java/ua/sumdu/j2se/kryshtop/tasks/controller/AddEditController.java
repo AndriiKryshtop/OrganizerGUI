@@ -171,28 +171,145 @@ public class AddEditController {
         }
 
         okButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-            if (title.getText().compareTo("") == 0) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Information Dialog");
-                alert.setHeaderText(null);
-                alert.setContentText("You must enter a title!");
+            String string = "";
+            int hoursMax = 23;
+            int minutesMax = 59;
 
-                alert.showAndWait();
+            if (repeat.getSelectedToggle() == unRepeatebleRadioButton) {
+                try {
+                    string = "\"time hours spinner\"";
+                    if (Integer.parseInt(timeHoursSpinner.getEditor().getText() + "") < 0 ||
+                            Integer.parseInt(timeHoursSpinner.getEditor().getText() + "") > hoursMax) {
+                        throw new NumberFormatException();
+                    }
+                    string = "\"time minutes spinner\"";
+                    if (Integer.parseInt(timeMinutesSpinner.getEditor().getText() + "") < 0 ||
+                            Integer.parseInt(timeMinutesSpinner.getEditor().getText() + "") > minutesMax) {
+                        throw new NumberFormatException();
+                    }
+                } catch (NumberFormatException exception) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Dialog");
+                    alert.setHeaderText(null);
+                    alert.setContentText("You have entered a wrong value in " + string);
+                    alert.showAndWait();
+                    return;
+                }
+            } else {
+                try {
+                    string = "\"start time hours spinner\"";
+                    if (Integer.parseInt(startHoursSpinner.getEditor().getText() + "") < 0 ||
+                            Integer.parseInt(startHoursSpinner.getEditor().getText() + "") > hoursMax) {
+                        throw new NumberFormatException();
+                    }
+                    string = "\"start time minutes spinner\"";
+                    if (Integer.parseInt(startMinutesSpinner.getEditor().getText() + "") < 0 ||
+                            Integer.parseInt(startMinutesSpinner.getEditor().getText() + "") > minutesMax) {
+                        throw new NumberFormatException();
+                    }
+                    string = "\"end time hours spinner\"";
+                    if (Integer.parseInt(endHoursSpinner.getEditor().getText() + "") < 0 ||
+                            Integer.parseInt(endHoursSpinner.getEditor().getText() + "") > hoursMax) {
+                        throw new NumberFormatException();
+                    }
+                    string = "\"end time minutes spinner\"";
+                    if (Integer.parseInt(endMinutesSpinner.getEditor().getText() + "") < 0 ||
+                            Integer.parseInt(endMinutesSpinner.getEditor().getText() + "") > minutesMax) {
+                        throw new NumberFormatException();
+                    }
+                    string = "\"interval days spinner\"";
+                    if (Integer.parseInt(daysSpinner.getEditor().getText() + "") < 0 ||
+                            Integer.parseInt(daysSpinner.getEditor().getText() + "") > 30) {
+                        throw new NumberFormatException();
+                    }
+                    string = "\"interval hours spinner\"";
+                    if (Integer.parseInt(hoursSpinner.getEditor().getText() + "") < 0 ||
+                            Integer.parseInt(hoursSpinner.getEditor().getText() + "") > hoursMax) {
+                        throw new NumberFormatException();
+                    }
+                    string = "\"interval minutes spinner\"";
+                    if (Integer.parseInt(minutesSpinner.getEditor().getText() + "") < 0 ||
+                            Integer.parseInt(minutesSpinner.getEditor().getText() + "") > minutesMax) {
+                        throw new NumberFormatException();
+                    }
+                    string = "\"interval seconds spinner\"";
+                    if (Integer.parseInt(secondsSpinner.getEditor().getText() + "") < 0 ||
+                            Integer.parseInt(secondsSpinner.getEditor().getText() + "") > 59) {
+                        throw new NumberFormatException();
+                    }
+                } catch (NumberFormatException exception) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Dialog");
+                    alert.setHeaderText(null);
+                    alert.setContentText("You have entered a wrong value in " + string);
+                    alert.showAndWait();
+                    return;
+                }
             }
-            else if ((startDatePicker.getValue().compareTo(endDatePicker.getValue()) == 0) &&
+            if ((repeat.getSelectedToggle() == repeatebleRadioButton) &&
+                    (startDatePicker.getValue().compareTo(endDatePicker.getValue()) == 0) &&
                     ((Integer.parseInt(startHoursSpinner.getEditor().getText() + "") >
                             Integer.parseInt(endHoursSpinner.getEditor().getText() + "")) ||
                             (Integer.parseInt(startHoursSpinner.getEditor().getText() + "") ==
                                     Integer.parseInt(endHoursSpinner.getEditor().getText() + "") &&
                                     (Integer.parseInt(startMinutesSpinner.getEditor().getText() + "") >=
-                                    Integer.parseInt(endMinutesSpinner.getEditor().getText() + ""))))) {
+                                            Integer.parseInt(endMinutesSpinner.getEditor().getText() + ""))))) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Information Dialog");
                 alert.setHeaderText(null);
                 alert.setContentText("End time can not be earlier than or equal to the start time!");
-
                 alert.showAndWait();
+                return;
+            }
+            if (repeat.getSelectedToggle() == repeatebleRadioButton) {
+                if (new Date().compareTo(new Date(
+                        Date.from(startDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime()
+                                + Integer.parseInt(startHoursSpinner.getEditor().getText() + "") * 3600000
+                                + Integer.parseInt(startMinutesSpinner.getEditor().getText() + "") * 60000))
+                        == 1) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Dialog");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Start time can not be earlier than to current time!");
+                    alert.showAndWait();
+                    return;
+                }
             } else {
+                if (new Date().compareTo(new Date(
+                        Date.from(timeDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime()
+                                + Integer.parseInt(timeHoursSpinner.getEditor().getText() + "") * 3600000
+                                + Integer.parseInt(timeMinutesSpinner.getEditor().getText() + "") * 60000))
+                        == 1) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information Dialog");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Time can not be earlier than or equal to current time!");
+                    alert.showAndWait();
+                    return;
+                }
+            }
+
+            if (repeat.getSelectedToggle() == repeatebleRadioButton
+                    && Integer.parseInt(daysSpinner.getEditor().getText() + "") == 0
+                    && Integer.parseInt(hoursSpinner.getEditor().getText() + "") == 0
+                    && Integer.parseInt(minutesSpinner.getEditor().getText() + "") == 0
+                    && Integer.parseInt(secondsSpinner.getEditor().getText() + "") == 0
+                    ) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Information Dialog");
+                alert.setHeaderText(null);
+                alert.setContentText("Interval can't be 0 if task is repeatable!");
+                alert.showAndWait();
+                return;
+            }
+            if (title.getText().compareTo("") == 0) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Information Dialog");
+                alert.setHeaderText(null);
+                alert.setContentText("You must enter a title!");
+                alert.showAndWait();
+                return;
+            }
 
                 Task task;
                 final int day = 86400;
@@ -244,7 +361,6 @@ public class AddEditController {
                 Stage stage = (Stage) okButton.getScene().getWindow();
                 stage.close();
                 MainApp.getPrimaryStage().show();
-            }
         });
 
         cancelButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
