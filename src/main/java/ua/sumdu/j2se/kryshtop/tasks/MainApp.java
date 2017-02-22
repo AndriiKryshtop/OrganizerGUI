@@ -1,7 +1,6 @@
 package ua.sumdu.j2se.kryshtop.tasks;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -19,19 +18,27 @@ import javafx.stage.WindowEvent;
 import ua.sumdu.j2se.kryshtop.tasks.model.ArrayTaskList;
 import ua.sumdu.j2se.kryshtop.tasks.model.Task;
 import ua.sumdu.j2se.kryshtop.tasks.model.TaskList;
+import ua.sumdu.j2se.kryshtop.tasks.view.Alerts;
 import ua.sumdu.j2se.kryshtop.tasks.util.TaskIO;
 
 public class MainApp extends Application {
-    private File binFile = new File("/files/tasks.bin");
 
-    private File txtFile = new File("/files/tasks.txt");
+    private File binFile = new File(System.getProperty("user.dir") + "/src/main/resources/files/tasks.bin");
+
+    private File textFile = new File(System.getProperty("user.dir") + "/src/main/resources/files/tasks.txt");
 
     private static ObservableList<Task> taskData = FXCollections.observableArrayList();
 
     private static Stage primaryStage;
 
+    private static String readFilesErrorMassage;
+    
+    private static int createFilesindicator;
+
     @Override
     public void start(Stage stage) throws Exception {
+        showLoadFilesMassage();
+
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Main.fxml"));
         Scene scene = new Scene(root, 880, 418);
         stage.setTitle("Organizer");
@@ -54,6 +61,16 @@ public class MainApp extends Application {
         primaryStage.show();
     }
 
+    private void showLoadFilesMassage() {
+        if (createFilesindicator == 2) {
+            Alerts.showWarningAlert(readFilesErrorMassage + "Attention! Your data won't be saved!");
+        } else if (createFilesindicator == 1) {
+            Alerts.showWarningAlert(readFilesErrorMassage);
+        } else {
+            Alerts.showWarningAlert("Data is loaded successfully.");
+        }
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -67,56 +84,13 @@ public class MainApp extends Application {
         try {
             TaskIO.writeBinary(arrayTaskList, binFile);
         } catch (IOException writeBinException) {
-            System.out.println("File not found!");
             writeBinException.printStackTrace(); //TODO: print to LOG
-            try {
-                binFile.createNewFile();
-            } catch (IOException createBinException) {
-                createBinException.printStackTrace(); //TODO: print to LOG
-
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error Dialog");
-                alert.setHeaderText("Can't to create new file!");
-                alert.setContentText("Can't to create new file. You can see a details in log.");
-                alert.showAndWait();
-            }
-
-            try {
-                TaskIO.writeBinary(arrayTaskList, binFile);
-            } catch (IOException writeBinException2) {
-                writeBinException2.printStackTrace(); //TODO: print to LOG
-                Alert binAlert = new Alert(Alert.AlertType.ERROR);
-                binAlert.setTitle("Error Dialog");
-                binAlert.setHeaderText("Can't write to tasks.bin!");
-                binAlert.setContentText("You can see a details in log.");
-                binAlert.showAndWait();
-            }
         }
 
         try {
-            TaskIO.writeText(arrayTaskList, txtFile);
+            TaskIO.writeText(arrayTaskList, textFile);
         } catch (IOException writeTxtException) {
             writeTxtException.printStackTrace(); //TODO: print to LOG
-            try {
-                txtFile.createNewFile();
-            } catch (IOException createTxtException) {
-                createTxtException.printStackTrace(); //TODO: print it LOG
-                Alert txtAlert = new Alert(Alert.AlertType.ERROR);
-                txtAlert.setTitle("Error Dialog");
-                txtAlert.setHeaderText("Can't create tasks.txt!");
-                txtAlert.setContentText("You can see a details in log.");
-                txtAlert.showAndWait();
-            }
-            try {
-                TaskIO.writeText(arrayTaskList, txtFile);
-            } catch (IOException writeTxtException2) {
-                writeTxtException2.printStackTrace(); //TODO: print to LOG
-                Alert txtAlert = new Alert(Alert.AlertType.ERROR);
-                txtAlert.setTitle("Error Dialog");
-                txtAlert.setHeaderText("Can't write to tasks.txt!");
-                txtAlert.setContentText("You can see a details in log.");
-                txtAlert.showAndWait();
-            }
         }
     }
 
@@ -124,53 +98,54 @@ public class MainApp extends Application {
     public void init() {
         TaskList arrayTaskList = new ArrayTaskList();
 
-        try {
-            TaskIO.readBinary(arrayTaskList, binFile);
-        } catch (FileNotFoundException fileNotFoundException) {
-            fileNotFoundException.printStackTrace(); //TODO: print to LOG
+        if (!binFile.exists()) {
+            //TODO: print to log
             try {
-                binFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace(); //TODO: print to log
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Warning Dialog");
-                alert.setHeaderText("Can't to create tasks.bin!");
-                alert.setContentText("Attention! Data gone be saved only in tasks.txt file.");
-                alert.showAndWait();
+                if (!binFile.createNewFile()) {
+                    readFilesErrorMassage += "Can't to create tasks.bin!\n";
+                    createFilesindicator++;
+                }
+            } catch (IOException createBinException) {
+                createBinException.printStackTrace(); //TODO: print to log
+                readFilesErrorMassage += "Can't to create tasks.bin!\n";
+                createFilesindicator++;
             }
-        } catch (IOException ioException) {
-            ioException.printStackTrace(); //TODO: print to LOG
-            Alert binAlert = new Alert(Alert.AlertType.WARNING);
-            binAlert.setTitle("Warning Dialog");
-            binAlert.setHeaderText("Can't read from tasks.bin!");
-            binAlert.setContentText("You can see a details in log.");
-            binAlert.showAndWait();
+        } else {
+            try {
+                TaskIO.readBinary(arrayTaskList, binFile);
+            } catch (Exception readBinException) {
+                readBinException.printStackTrace(); //TODO: print to log
+                readFilesErrorMassage += "Can't to read tasks.bin!\n";
+                createFilesindicator++;
+            }
+        }
 
-            if (arrayTaskList.equals(new ArrayTaskList())) {
+        if (arrayTaskList.equals(new ArrayTaskList())) {
+            if(!textFile.exists()){
+                //TODO: print to log
                 try {
-                    TaskIO.readText(arrayTaskList, txtFile);
-                } catch (FileNotFoundException e) {
-                    try {
-                        txtFile.createNewFile();
-                    } catch (IOException e1) {
-                        e1.printStackTrace(); //TODO: print to log
-                        Alert alert = new Alert(Alert.AlertType.WARNING);
-                        alert.setTitle("Warning Dialog");
-                        alert.setHeaderText("Can't to create tasks.txt!");
-                        alert.setContentText("Attention! Probably data would'n be saved after work!.");
-                        alert.showAndWait();
+                    if (!textFile.createNewFile()) {
+                        readFilesErrorMassage += "Can't to create tasks.txt!\n";
+                        createFilesindicator++;
                     }
-                } catch (Exception writeTxtException) {
-                    writeTxtException.printStackTrace(); //TODO: print to LOG
-                    Alert txtAlert = new Alert(Alert.AlertType.WARNING);
-                    txtAlert.setTitle("Warning Dialog");
-                    txtAlert.setHeaderText("Can't read from tasks.txt!");
-                    txtAlert.setContentText("You can see a details in log.");
-                    txtAlert.showAndWait();
+                } catch (IOException txtReadException) {
+                    txtReadException.printStackTrace(); //TODO: print to log
+                    readFilesErrorMassage += "Can't to create tasks.txt!\n";
+                    createFilesindicator++;
+                }
+            } else {
+                try {
+                    TaskIO.readText(arrayTaskList, textFile);
+                } catch (Exception readTxtException) {
+                    readTxtException.printStackTrace(); //TODO: print to log
+                    readFilesErrorMassage += "Can't read tasks.txt!\n";
+                    createFilesindicator++;
                 }
             }
+        }
 
-            taskData.forEach(arrayTaskList::add);
+        for (Task task : arrayTaskList) {
+            getTaskData().add(task);
         }
     }
 
