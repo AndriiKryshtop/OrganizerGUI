@@ -14,6 +14,7 @@ public class Tasks {
      * @param end   end of a time distance
      * @return subset of tasks that are planed for performance in established time distance at least one time
      */
+    @SuppressWarnings("unused")
     public static Iterable<Task> incoming(Iterable<Task> tasks, Date start, Date end) {
         ArrayTaskList bufferArray = new ArrayTaskList();
 
@@ -23,9 +24,7 @@ public class Tasks {
             }
         }
 
-        Iterable<Task> incomingTaskList = bufferArray;
-
-        return incomingTaskList;
+        return bufferArray;
     }
 
     public static SortedMap<Date, Set<Task>> calendar(Iterable<Task> tasks, Date start, Date end) {
@@ -39,7 +38,7 @@ public class Tasks {
             }
 
             while (task.nextTimeAfter(bufferDate).compareTo(end) != 1) {
-                if (sortedMap.containsKey(task.nextTimeAfter(bufferDate)) == false) {
+                if (!sortedMap.containsKey(task.nextTimeAfter(bufferDate))) {
                     Set<Task> set = new HashSet<>();
                     set.add(task);
                     sortedMap.put(task.nextTimeAfter(bufferDate), set);

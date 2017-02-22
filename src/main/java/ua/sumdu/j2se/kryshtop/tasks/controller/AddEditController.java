@@ -7,15 +7,15 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import ua.sumdu.j2se.kryshtop.tasks.MainApp;
 import ua.sumdu.j2se.kryshtop.tasks.model.Task;
+import ua.sumdu.j2se.kryshtop.tasks.view.Alerts;
 
-import javax.swing.*;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Calendar;
 import java.util.Date;
 
+@SuppressWarnings({"CanBeFinal", "unused"})
 public class AddEditController {
-    public static int taskId;
+    static int taskId;
 
     @FXML
     private TextField title;
@@ -33,10 +33,10 @@ public class AddEditController {
     private RadioButton inActiveRadioButton;
 
     @FXML
-    private RadioButton repeatebleRadioButton;
+    private RadioButton repeatableRadioButton;
 
     @FXML
-    private RadioButton unRepeatebleRadioButton;
+    private RadioButton unRepeatableRadioButton;
 
     @FXML
     private DatePicker startDatePicker;
@@ -83,6 +83,7 @@ public class AddEditController {
     @FXML
     private Button cancelButton;
 
+    @SuppressWarnings({"unchecked", "unused"})
     @FXML
     public void initialize() {
         final Callback<DatePicker, DateCell> dayCellFactory =
@@ -146,7 +147,7 @@ public class AddEditController {
 
         repeat.selectedToggleProperty().addListener((ov, old_toggle, new_toggle) -> {
             boolean switchVariable;
-            switchVariable = repeat.getSelectedToggle() != repeatebleRadioButton;
+            switchVariable = repeat.getSelectedToggle() != repeatableRadioButton;
 
             timeDatePicker.setDisable(!switchVariable);
             timeHoursSpinner.setDisable(!switchVariable);
@@ -164,7 +165,7 @@ public class AddEditController {
             secondsSpinner.setDisable(switchVariable);
         });
 
-        repeat.selectToggle(unRepeatebleRadioButton);
+        repeat.selectToggle(unRepeatableRadioButton);
 
         if (taskId != -1) {
             substituteData(taskId);
@@ -175,7 +176,7 @@ public class AddEditController {
             int hoursMax = 23;
             int minutesMax = 59;
 
-            if (repeat.getSelectedToggle() == unRepeatebleRadioButton) {
+            if (repeat.getSelectedToggle() == unRepeatableRadioButton) {
                 try {
                     string = "\"time hours spinner\"";
                     if (Integer.parseInt(timeHoursSpinner.getEditor().getText() + "") < 0 ||
@@ -238,15 +239,11 @@ public class AddEditController {
                         throw new NumberFormatException();
                     }
                 } catch (NumberFormatException exception) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Information Dialog");
-                    alert.setHeaderText(null);
-                    alert.setContentText("You have entered a wrong value in " + string);
-                    alert.showAndWait();
+                    Alerts.showInformationAlert("You have entered a wrong value in " + string);
                     return;
                 }
             }
-            if ((repeat.getSelectedToggle() == repeatebleRadioButton) &&
+            if ((repeat.getSelectedToggle() == repeatableRadioButton) &&
                     (startDatePicker.getValue().compareTo(endDatePicker.getValue()) == 0) &&
                     ((Integer.parseInt(startHoursSpinner.getEditor().getText() + "") >
                             Integer.parseInt(endHoursSpinner.getEditor().getText() + "")) ||
@@ -254,24 +251,16 @@ public class AddEditController {
                                     Integer.parseInt(endHoursSpinner.getEditor().getText() + "") &&
                                     (Integer.parseInt(startMinutesSpinner.getEditor().getText() + "") >=
                                             Integer.parseInt(endMinutesSpinner.getEditor().getText() + ""))))) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Information Dialog");
-                alert.setHeaderText(null);
-                alert.setContentText("End time can not be earlier than or equal to the start time!");
-                alert.showAndWait();
+                Alerts.showInformationAlert("End time can not be earlier than or equal to the start time!");
                 return;
             }
-            if (repeat.getSelectedToggle() == repeatebleRadioButton) {
+            if (repeat.getSelectedToggle() == repeatableRadioButton) {
                 if (new Date().compareTo(new Date(
                         Date.from(startDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime()
                                 + Integer.parseInt(startHoursSpinner.getEditor().getText() + "") * 3600000
                                 + Integer.parseInt(startMinutesSpinner.getEditor().getText() + "") * 60000))
                         == 1) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Information Dialog");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Start time can not be earlier than to current time!");
-                    alert.showAndWait();
+                    Alerts.showInformationAlert("Start time can not be earlier than to current time!");
                     return;
                 }
             } else {
@@ -280,87 +269,75 @@ public class AddEditController {
                                 + Integer.parseInt(timeHoursSpinner.getEditor().getText() + "") * 3600000
                                 + Integer.parseInt(timeMinutesSpinner.getEditor().getText() + "") * 60000))
                         == 1) {
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Information Dialog");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Time can not be earlier than or equal to current time!");
-                    alert.showAndWait();
+                    Alerts.showInformationAlert("Time can not be earlier than or equal to current time!");
                     return;
                 }
             }
 
-            if (repeat.getSelectedToggle() == repeatebleRadioButton
+            if (repeat.getSelectedToggle() == repeatableRadioButton
                     && Integer.parseInt(daysSpinner.getEditor().getText() + "") == 0
                     && Integer.parseInt(hoursSpinner.getEditor().getText() + "") == 0
                     && Integer.parseInt(minutesSpinner.getEditor().getText() + "") == 0
                     && Integer.parseInt(secondsSpinner.getEditor().getText() + "") == 0
                     ) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Information Dialog");
-                alert.setHeaderText(null);
-                alert.setContentText("Interval can't be 0 if task is repeatable!");
-                alert.showAndWait();
+                Alerts.showInformationAlert("Interval can't be 0 if task is repeatable!");
                 return;
             }
             if (title.getText().compareTo("") == 0) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Information Dialog");
-                alert.setHeaderText(null);
-                alert.setContentText("You must enter a title!");
-                alert.showAndWait();
+                Alerts.showInformationAlert("You must enter a title!");
                 return;
             }
 
-                Task task;
-                final int day = 86400;
-                final int hour = 3600;
-                final int minute = 60;
+            Task task;
+            final int day = 86400;
+            final int hour = 3600;
+            final int minute = 60;
 
 
-                if (taskId != -1) {
-                    MainApp.getTaskData().remove(taskId);
-                }
+            if (taskId != -1) {
+                MainApp.getTaskData().remove(taskId);
+            }
 
-                if (repeat.getSelectedToggle() == repeatebleRadioButton) {
-                    int interval;
-                    interval = Integer.parseInt(daysSpinner.getEditor().getText() + "") * day
-                            + Integer.parseInt(hoursSpinner.getEditor().getText() + "") * hour
-                            + Integer.parseInt(minutesSpinner.getEditor().getText() + "") * minute
-                            + Integer.parseInt(secondsSpinner.getEditor().getText() + "");
+            if (repeat.getSelectedToggle() == repeatableRadioButton) {
+                int interval;
+                interval = Integer.parseInt(daysSpinner.getEditor().getText() + "") * day
+                        + Integer.parseInt(hoursSpinner.getEditor().getText() + "") * hour
+                        + Integer.parseInt(minutesSpinner.getEditor().getText() + "") * minute
+                        + Integer.parseInt(secondsSpinner.getEditor().getText() + "");
 
-                    Date startDate = Date.from(startDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-                    Date endDate = Date.from(endDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                Date startDate = Date.from(startDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                Date endDate = Date.from(endDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-                    startDate = new Date(startDate.getTime()
-                            + Integer.parseInt(startHoursSpinner.getEditor().getText() + "") * hour
-                            + Integer.parseInt(startMinutesSpinner.getEditor().getText() + "") * minute
-                    );
-                    endDate = new Date(startDate.getTime()
-                            + Integer.parseInt(endHoursSpinner.getEditor().getText() + "") * hour
-                            + Integer.parseInt(endMinutesSpinner.getEditor().getText() + "") * minute
-                    );
+                startDate = new Date(startDate.getTime()
+                        + Integer.parseInt(startHoursSpinner.getEditor().getText() + "") * hour
+                        + Integer.parseInt(startMinutesSpinner.getEditor().getText() + "") * minute
+                );
+                endDate = new Date(startDate.getTime()
+                        + Integer.parseInt(endHoursSpinner.getEditor().getText() + "") * hour
+                        + Integer.parseInt(endMinutesSpinner.getEditor().getText() + "") * minute
+                );
 
-                    task = new Task(
-                            title.getText(), startDate, endDate, interval);
-                } else {
-                    Date timeDate = Date.from(startDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-                    timeDate = new Date(timeDate.getTime()
-                            + Integer.parseInt(endHoursSpinner.getEditor().getText() + "") * hour
-                            + Integer.parseInt(endMinutesSpinner.getEditor().getText() + "") * minute
-                    );
+                task = new Task(
+                        title.getText(), startDate, endDate, interval);
+            } else {
+                Date timeDate = Date.from(startDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                timeDate = new Date(timeDate.getTime()
+                        + Integer.parseInt(endHoursSpinner.getEditor().getText() + "") * hour
+                        + Integer.parseInt(endMinutesSpinner.getEditor().getText() + "") * minute
+                );
 
-                    task = new Task(title.getText(), timeDate);
-                }
+                task = new Task(title.getText(), timeDate);
+            }
 
-                if (activity.getSelectedToggle() == activeRadioButton) {
-                    task.setActive(true);
-                }
+            if (activity.getSelectedToggle() == activeRadioButton) {
+                task.setActive(true);
+            }
 
-                MainApp.getTaskData().add(task);
+            MainApp.getTaskData().add(task);
 
-                Stage stage = (Stage) okButton.getScene().getWindow();
-                stage.close();
-                MainApp.getPrimaryStage().show();
+            Stage stage = (Stage) okButton.getScene().getWindow();
+            stage.close();
+            MainApp.getPrimaryStage().show();
         });
 
         cancelButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
@@ -381,7 +358,7 @@ public class AddEditController {
         }
 
         if (task.isRepeated()) {
-            repeat.selectToggle(repeatebleRadioButton);
+            repeat.selectToggle(repeatableRadioButton);
             startDatePicker.setValue(
                     task.getStartTime().toInstant().atZone(
                             ZoneId.systemDefault()
@@ -416,7 +393,7 @@ public class AddEditController {
             secondsSpinner.getEditor().setText(interval + "");
 
         } else {
-            repeat.selectToggle(unRepeatebleRadioButton);
+            repeat.selectToggle(unRepeatableRadioButton);
             timeDatePicker.setValue(
                     task.getTime().toInstant().atZone(
                             ZoneId.systemDefault()

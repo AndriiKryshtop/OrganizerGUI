@@ -15,6 +15,8 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 import javafx.stage.WindowEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ua.sumdu.j2se.kryshtop.tasks.model.ArrayTaskList;
 import ua.sumdu.j2se.kryshtop.tasks.model.Task;
 import ua.sumdu.j2se.kryshtop.tasks.model.TaskList;
@@ -23,35 +25,39 @@ import ua.sumdu.j2se.kryshtop.tasks.util.TaskIO;
 
 public class MainApp extends Application {
 
-    private File binFile = new File(System.getProperty("user.dir") + "/src/main/resources/files/tasks.bin");
+    private final File binFile = new File(System.getProperty("user.dir") + "/src/main/resources/files/tasks.bin");
 
-    private File textFile = new File(System.getProperty("user.dir") + "/src/main/resources/files/tasks.txt");
+    private final File textFile = new File(System.getProperty("user.dir") + "/src/main/resources/files/tasks.txt");
 
-    private static ObservableList<Task> taskData = FXCollections.observableArrayList();
+    private static final ObservableList<Task> taskData = FXCollections.observableArrayList();
 
     private static Stage primaryStage;
 
     private static String readFilesErrorMassage;
     
-    private static int createFilesindicator;
+    private static int createFilesIndicator;
 
     @Override
     public void start(Stage stage) throws Exception {
         showLoadFilesMassage();
 
+        Logger logger = LoggerFactory.getLogger(MainApp.class);
+        logger.info("Hello World");
+
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Main.fxml"));
         Scene scene = new Scene(root, 880, 418);
         stage.setTitle("Organizer");
         stage.setScene(scene);
-        stage.setResizable(false);
+        //stage.setResizable(false);
 
         stage.setOnCloseRequest((WindowEvent event) -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirmation Dialog");
             alert.setHeaderText("");
-            alert.setContentText("Are you really wont to exit?");
+            alert.setContentText("Are you really want to exit?");
 
             Optional<ButtonType> result = alert.showAndWait();
+            //noinspection OptionalGetWithoutIsPresent
             if (result.get() != ButtonType.OK) {
                 event.consume();
             }
@@ -62,9 +68,9 @@ public class MainApp extends Application {
     }
 
     private void showLoadFilesMassage() {
-        if (createFilesindicator == 2) {
+        if (createFilesIndicator == 2) {
             Alerts.showWarningAlert(readFilesErrorMassage + "Attention! Your data won't be saved!");
-        } else if (createFilesindicator == 1) {
+        } else if (createFilesIndicator == 1) {
             Alerts.showWarningAlert(readFilesErrorMassage);
         } else {
             Alerts.showWarningAlert("Data is loaded successfully.");
@@ -103,12 +109,12 @@ public class MainApp extends Application {
             try {
                 if (!binFile.createNewFile()) {
                     readFilesErrorMassage += "Can't to create tasks.bin!\n";
-                    createFilesindicator++;
+                    createFilesIndicator++;
                 }
             } catch (IOException createBinException) {
                 createBinException.printStackTrace(); //TODO: print to log
                 readFilesErrorMassage += "Can't to create tasks.bin!\n";
-                createFilesindicator++;
+                createFilesIndicator++;
             }
         } else {
             try {
@@ -116,7 +122,7 @@ public class MainApp extends Application {
             } catch (Exception readBinException) {
                 readBinException.printStackTrace(); //TODO: print to log
                 readFilesErrorMassage += "Can't to read tasks.bin!\n";
-                createFilesindicator++;
+                createFilesIndicator++;
             }
         }
 
@@ -126,12 +132,12 @@ public class MainApp extends Application {
                 try {
                     if (!textFile.createNewFile()) {
                         readFilesErrorMassage += "Can't to create tasks.txt!\n";
-                        createFilesindicator++;
+                        createFilesIndicator++;
                     }
                 } catch (IOException txtReadException) {
                     txtReadException.printStackTrace(); //TODO: print to log
                     readFilesErrorMassage += "Can't to create tasks.txt!\n";
-                    createFilesindicator++;
+                    createFilesIndicator++;
                 }
             } else {
                 try {
@@ -139,7 +145,7 @@ public class MainApp extends Application {
                 } catch (Exception readTxtException) {
                     readTxtException.printStackTrace(); //TODO: print to log
                     readFilesErrorMassage += "Can't read tasks.txt!\n";
-                    createFilesindicator++;
+                    createFilesIndicator++;
                 }
             }
         }

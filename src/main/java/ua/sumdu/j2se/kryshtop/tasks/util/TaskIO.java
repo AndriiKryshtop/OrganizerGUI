@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class TaskIO {
-    public static final void write(TaskList tasks, OutputStream out) throws IOException {
+    private static void write(TaskList tasks, OutputStream out) throws IOException {
         try (DataOutputStream dataOutputStream = new DataOutputStream(out)) {
             dataOutputStream.writeInt(tasks.size());
 
@@ -29,7 +29,7 @@ public class TaskIO {
         }
     }
 
-    public static final void read(TaskList tasks, InputStream in) throws IOException {
+    private static void read(TaskList tasks, InputStream in) throws IOException {
         try (DataInputStream dataInputStream = new DataInputStream(in)) {
             int size = dataInputStream.readInt();
             for (int i = 0; i < size; i++) {
@@ -53,7 +53,7 @@ public class TaskIO {
         }
     }
 
-    public static final void writeBinary(TaskList tasks, File file) throws IOException {
+    public static void writeBinary(TaskList tasks, File file) throws IOException {
         try (FileOutputStream fileOutputStream = new FileOutputStream(file);
              BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream)
         ) {
@@ -61,7 +61,7 @@ public class TaskIO {
         }
     }
 
-    public static final void readBinary(TaskList tasks, File file) throws IOException {
+    public static void readBinary(TaskList tasks, File file) throws IOException {
         try (FileInputStream fileInputStream = new FileInputStream(file);
              BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream)
         ) {
@@ -69,7 +69,7 @@ public class TaskIO {
         }
     }
 
-    public static final void write(TaskList tasks, Writer out) throws IOException {
+    private static void write(TaskList tasks, Writer out) throws IOException {
         try (BufferedWriter bufferedWriter = new BufferedWriter(out)) {
             int i = 0;
             for (Task task : tasks) {
@@ -81,7 +81,7 @@ public class TaskIO {
         }
     }
 
-    public static final void read(TaskList tasks, Reader in) throws Exception {
+    private static void read(TaskList tasks, Reader in) throws Exception {
         try (BufferedReader bufferedReader = new BufferedReader(in)) {
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
@@ -141,7 +141,7 @@ public class TaskIO {
         }
     }
 
-    public static final void writeText(TaskList tasks, File file) throws IOException {
+    public static void writeText(TaskList tasks, File file) throws IOException {
         try (FileWriter fileWriter = new FileWriter(file);
              BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
              PrintWriter printWriter = new PrintWriter(bufferedWriter)
@@ -150,7 +150,7 @@ public class TaskIO {
         }
     }
 
-    public static final void readText(TaskList tasks, File file) throws Exception {
+    public static void readText(TaskList tasks, File file) throws Exception {
         try (FileReader fileReader = new FileReader(file);
              BufferedReader bufferedReader = new BufferedReader(fileReader)
         ) {

@@ -16,7 +16,7 @@ public class ArrayTaskList extends TaskList {
     private Task taskList[] = new Task[20];
 
     public void add(Task task) throws NullTaskException {
-        if (task == null) throw new NullTaskException("Task == null");
+        if (task == null) throw new NullTaskException();
 
         if (size() == taskList.length) {
             sizeChange(size() + (size() / 4));
@@ -51,8 +51,8 @@ public class ArrayTaskList extends TaskList {
         return false;
     }
 
-    public Task getTask(int index) throws InvalidTaskIndexException {
-        if ((index < 0) || (index > (size - 1))) throw new InvalidTaskIndexException("Wrong index");
+    protected Task getTask(int index) throws InvalidTaskIndexException {
+        if ((index < 0) || (index > (size - 1))) throw new InvalidTaskIndexException();
 
         return taskList[index];
     }
@@ -96,6 +96,7 @@ public class ArrayTaskList extends TaskList {
         };
     }
 
+    @SuppressWarnings("CloneDoesntCallSuperClone")
     @Override
     public ArrayTaskList clone() {
         ArrayTaskList outputTaskList = new ArrayTaskList();

@@ -6,14 +6,15 @@ import ua.sumdu.j2se.kryshtop.tasks.model.exceptions.NullTaskException;
 import java.io.Serializable;
 
 
+@SuppressWarnings("unused")
 public abstract class TaskList implements Iterable<Task>, Cloneable, Serializable {
-    protected int size;
+    int size;
 
     public abstract void add(Task task) throws NullTaskException;
 
     public abstract boolean remove(Task task);
 
-    public abstract Task getTask(int index) throws InvalidTaskIndexException;
+    protected abstract Task getTask(int index) throws InvalidTaskIndexException;
 
     /**
      * To get number of records in the task list

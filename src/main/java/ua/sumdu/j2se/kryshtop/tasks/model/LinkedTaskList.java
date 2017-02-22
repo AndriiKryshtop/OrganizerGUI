@@ -6,32 +6,33 @@ import ua.sumdu.j2se.kryshtop.tasks.model.exceptions.NullTaskException;
 
 import java.util.Iterator;
 
+@SuppressWarnings("unused")
 public class LinkedTaskList extends TaskList {
     private Node first;
     private Node last;
 
     private static class Node {
-        private Task value;
+        private final Task value;
         private Node previous;
         private Node next;
 
-        Node(Task value, Node previous, Node next) {
+        Node(Task value, Node previous) {
             this.value = value;
             this.previous = previous;
-            this.next = next;
+            this.next = null;
         }
     }
 
     @Override
     public void add(Task task) throws NullTaskException {
-        if (task == null) throw new NullTaskException("Task == null");
+        if (task == null) throw new NullTaskException();
 
         if (isEmpty()) {
-            first = new Node(task, null, null);
+            first = new Node(task, null);
             last = first;
         } else {
             Node buffer = last;
-            last = new Node(task, buffer, null);
+            last = new Node(task, buffer);
             buffer.next = last;
         }
 
@@ -39,7 +40,7 @@ public class LinkedTaskList extends TaskList {
     }
 
     @Override
-    public Task getTask(int index) throws InvalidTaskIndexException {
+    protected Task getTask(int index) throws InvalidTaskIndexException {
         Node buffer = first;
         for (int i = 0; i < size; i++) {
             if (i == index) {
@@ -47,7 +48,7 @@ public class LinkedTaskList extends TaskList {
             }
             buffer = buffer.next;
         }
-        throw new InvalidTaskIndexException("Wrong index");
+        throw new InvalidTaskIndexException();
     }
 
     @Override
@@ -110,6 +111,7 @@ public class LinkedTaskList extends TaskList {
         };
     }
 
+    @SuppressWarnings("CloneDoesntCallSuperClone")
     @Override
     public LinkedTaskList clone() {
         LinkedTaskList outputTaskList = new LinkedTaskList();

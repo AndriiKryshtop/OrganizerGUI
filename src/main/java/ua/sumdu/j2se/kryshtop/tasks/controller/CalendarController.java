@@ -14,11 +14,11 @@ import ua.sumdu.j2se.kryshtop.tasks.util.Tasks;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+@SuppressWarnings({"CanBeFinal", "unused"})
 public class CalendarController {
-    private ObservableList<Task> calendarTaskList = FXCollections.observableArrayList();
+    private final ObservableList<Task> calendarTaskList = FXCollections.observableArrayList();
 
     @FXML
     private DatePicker fromDatePicker;

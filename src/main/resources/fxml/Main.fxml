@@ -4,23 +4,26 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="427.0" prefWidth="893.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ua.sumdu.j2se.kryshtop.tasks.controller.MainController">
-   <children>
-      <Label layoutX="7.0" layoutY="14.0" text="Tasks:" wrapText="true" />
-      <TableView fx:id="mainTable" layoutX="8.0" layoutY="39.0" prefHeight="350.0" prefWidth="876.0">
-        <columns>
-          <TableColumn fx:id="activityColumn" prefWidth="20.0" text="A" />
-          <TableColumn fx:id="titleColumn" prefWidth="260.0" text="Title" />
-            <TableColumn fx:id="startTimeColumn" prefWidth="171.0" text="(Start) Time" />
-            <TableColumn fx:id="endTimeColumn" prefWidth="169.0" text="End time" />
-            <TableColumn fx:id="intervalColumn" prefWidth="254.0" text="Interval" />
-        </columns>
-      </TableView>
-      <Button fx:id="addNewTaskButton" layoutX="8.0" layoutY="395.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="160.0" text="Add new task" />
-      <Button fx:id="calendarButton" layoutX="748.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="131.0" text="Calendar" />
-      <Button fx:id="deleteButton" layoutX="828.0" layoutY="395.0" mnemonicParsing="false" text="Delete" />
-      <Button fx:id="editButton" layoutX="770.0" layoutY="395.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="50.0" text="Edit" />
-   </children>
-</Pane>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="427.0"
+            prefWidth="893.0" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="ua.sumdu.j2se.kryshtop.tasks.controller.MainController">
+    <Label layoutX="7.0" layoutY="14.0" text="Tasks:" wrapText="true"/>
+    <TableView fx:id="mainTable" layoutX="8.0" layoutY="39.0" prefHeight="350.0" prefWidth="876.0">
+      <columns>
+          <TableColumn fx:id="activityColumn" prefWidth="20.0" text="A"/>
+          <TableColumn fx:id="titleColumn" prefWidth="260.0" text="Title"/>
+          <TableColumn fx:id="startTimeColumn" prefWidth="171.0" text="(Start) Time"/>
+          <TableColumn fx:id="endTimeColumn" prefWidth="169.0" text="End time"/>
+          <TableColumn fx:id="intervalColumn" prefWidth="254.0" text="Interval"/>
+      </columns>
+    </TableView>
+    <Button fx:id="addNewTaskButton" layoutX="8.0" layoutY="395.0" mnemonicParsing="false" prefHeight="25.0"
+            prefWidth="160.0" text="Add new task"/>
+    <Button fx:id="calendarButton" layoutX="748.0" layoutY="10.0" mnemonicParsing="false" prefHeight="25.0"
+            prefWidth="131.0" text="Calendar"/>
+    <Button fx:id="deleteButton" layoutX="828.0" layoutY="395.0" mnemonicParsing="false" text="Delete"/>
+    <Button fx:id="editButton" layoutX="770.0" layoutY="395.0" mnemonicParsing="false" prefHeight="25.0"
+            prefWidth="50.0" text="Edit"/>
+</AnchorPane>

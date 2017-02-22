@@ -14,11 +14,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import ua.sumdu.j2se.kryshtop.tasks.MainApp;
 import ua.sumdu.j2se.kryshtop.tasks.model.Task;
+import ua.sumdu.j2se.kryshtop.tasks.view.Alerts;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.Optional;
 
+@SuppressWarnings({"CanBeFinal", "unused"})
 public class MainController {
     @FXML
     private Button calendarButton;
@@ -83,15 +84,8 @@ public class MainController {
                     stage.setResizable(false);
                     stage.show();
                 } catch (IOException exception) {
-                    exception.printStackTrace();
-
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Exception Dialog");
-                    alert.setHeaderText("Error!");
-                    alert.setContentText("Could not find file Calendar.fxml! \n You can watch details in log.");
-
-                    alert.showAndWait();
-                    //TODO: print to log
+                    exception.printStackTrace(); //TODO: print to log
+                    Alerts.showErrorAlert("Could not find file Calendar.fxml! \n You can watch details in log.");
                     MainApp.getPrimaryStage().close();
                 }
 
@@ -120,15 +114,10 @@ public class MainController {
                     stage.setResizable(false);
                     stage.show();
                 } catch (IOException exception) {
-                    exception.printStackTrace();
+                    exception.printStackTrace(); //TODO: print to log
 
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Exception Dialog");
-                    alert.setHeaderText("Error!");
-                    alert.setContentText("Could not find file AddEdit.fxml! \n You can watch details in log.");
+                    Alerts.showErrorAlert("Could not find file AddEdit.fxml! \n You can watch details in log.");
 
-                    alert.showAndWait();
-                    //TODO: print to log
                     MainApp.getPrimaryStage().close();
                 }
 
@@ -160,15 +149,10 @@ public class MainController {
                         stage.setResizable(false);
                         stage.show();
                     } catch (IOException exception) {
-                        exception.printStackTrace();
+                        exception.printStackTrace(); //TODO: print to log
 
-                        Alert alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Exception Dialog");
-                        alert.setHeaderText("Error!");
-                        alert.setContentText("Could not find file AddEdit.fxml! \n You can watch details in log.");
+                        Alerts.showErrorAlert("Could not find file AddEdit.fxml! \n You can watch details in log.");
 
-                        alert.showAndWait();
-                        //TODO: print to log
                         MainApp.getPrimaryStage().close();
                     }
 
@@ -192,6 +176,7 @@ public class MainController {
                 );
 
                 Optional<ButtonType> result = alert.showAndWait();
+                //noinspection OptionalGetWithoutIsPresent
                 if (result.get() == ButtonType.OK) {
                     MainApp.getTaskData().remove(mainTable.getSelectionModel().getSelectedIndex());
                 }

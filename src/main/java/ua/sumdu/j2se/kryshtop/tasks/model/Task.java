@@ -133,7 +133,7 @@ public class Task implements Cloneable, Serializable {
     public void setTime(Date start, Date end, int interval) throws MinusException {
         if ((end.compareTo(start) <= 0)
                 || (interval == 0))
-            throw new MinusException("You have entered a wrong start, end or interval");
+            throw new MinusException();
 
         if (!repeat) repeat = true;
 
@@ -214,6 +214,7 @@ public class Task implements Cloneable, Serializable {
         return result;
     }
 
+    @SuppressWarnings("CloneDoesntCallSuperClone")
     @Override
     public Task clone() {
         Task outputTask;
