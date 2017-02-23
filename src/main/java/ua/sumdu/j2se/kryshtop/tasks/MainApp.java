@@ -47,8 +47,9 @@ public class MainApp extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Main.fxml"));
         Scene scene = new Scene(root, 880, 418);
         stage.setTitle("Organizer");
+        stage.setMinWidth(880);
+        stage.setMinHeight(418);
         stage.setScene(scene);
-        //stage.setResizable(false);
 
         stage.setOnCloseRequest((WindowEvent event) -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
