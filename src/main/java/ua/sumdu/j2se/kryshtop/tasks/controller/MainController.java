@@ -77,9 +77,9 @@ public class MainController {
                 try {
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/Calendar.fxml"));
                     Parent root = fxmlLoader.load();
-                    Scene scene = new Scene(root, 712, 405);
 
                     Stage stage = new Stage();
+                    stage.setScene(new Scene(root, 712, 405));
 
                     stage.setOnCloseRequest(we -> {
                         stage.close();
@@ -87,7 +87,6 @@ public class MainController {
                     });
 
                     stage.setTitle("Calendar");
-                    stage.setScene(scene);
                     stage.setResizable(false);
                     stage.show();
                 } catch (IOException exception) {
@@ -107,9 +106,9 @@ public class MainController {
                 try {
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/AddEdit.fxml"));
                     Parent root = fxmlLoader.load();
-                    Scene scene = new Scene(root, 480, 334);
 
                     Stage stage = new Stage();
+                    stage.setScene(new Scene(root, 480, 334));
 
                     stage.setOnCloseRequest(windowEvent -> {
                         stage.close();
@@ -117,7 +116,6 @@ public class MainController {
                     });
 
                     stage.setTitle("Add new task");
-                    stage.setScene(scene);
                     stage.setResizable(false);
                     stage.show();
                 } catch (IOException exception) {
@@ -140,9 +138,9 @@ public class MainController {
                     try {
                         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/AddEdit.fxml"));
                         Parent root = fxmlLoader.load();
-                        Scene scene = new Scene(root, 480, 334);
 
                         Stage stage = new Stage();
+                        stage.setScene(new Scene(root, 480, 334));
 
                         AddEditController.taskId = mainTable.getSelectionModel().getSelectedIndex();
 
@@ -152,7 +150,6 @@ public class MainController {
                         });
 
                         stage.setTitle("Edit task");
-                        stage.setScene(scene);
                         stage.setResizable(false);
                         stage.show();
                     } catch (IOException exception) {

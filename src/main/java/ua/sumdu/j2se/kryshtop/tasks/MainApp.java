@@ -45,11 +45,10 @@ public class MainApp extends Application {
         logger.info("Hello World");
 
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Main.fxml"));
-        Scene scene = new Scene(root, 880, 418);
         stage.setTitle("Organizer");
         stage.setMinWidth(880);
         stage.setMinHeight(418);
-        stage.setScene(scene);
+        stage.setScene(new Scene(root));
 
         stage.setOnCloseRequest((WindowEvent event) -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
