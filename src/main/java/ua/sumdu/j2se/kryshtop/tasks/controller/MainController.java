@@ -58,7 +58,14 @@ public class MainController {
 
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
         startTimeColumn.setCellValueFactory(new PropertyValueFactory<>("startTime"));
-        endTimeColumn.setCellValueFactory(new PropertyValueFactory<>("endTime"));
+
+        endTimeColumn.setCellValueFactory(callback -> {
+            if (callback.getValue().isRepeated()) {
+                return new SimpleStringProperty(callback.getValue().getEndTime().toString());
+            } else {
+                return new SimpleStringProperty("");
+            }
+        });
 
         intervalColumn.setCellValueFactory(callback -> new SimpleStringProperty(callback.getValue().getRepeatIntervalString()));
 
