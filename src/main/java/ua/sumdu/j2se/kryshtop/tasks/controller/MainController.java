@@ -158,7 +158,7 @@ public class MainController {
 
                     MainApp.getPrimaryStage().close();
                 } else {
-                    chooseTaskDialog("edit");
+                    Alerts.showInformationAlert("Choose task before pressing \"edit\" button!");
                 }
 
             }
@@ -181,17 +181,8 @@ public class MainController {
                     MainApp.getTaskData().remove(mainTable.getSelectionModel().getSelectedIndex());
                 }
             } else {
-                chooseTaskDialog("delete");
+                Alerts.showInformationAlert("Choose task before pressing \"delete\" button!");
             }
         });
-    }
-
-    private void chooseTaskDialog(String button) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Information Dialog");
-        alert.setHeaderText(null);
-        alert.setContentText("Choose task before pressing \"" + button + "\" button!");
-
-        alert.showAndWait();
     }
 }
