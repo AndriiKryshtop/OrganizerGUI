@@ -410,7 +410,7 @@ public class AddEditController {
                 + Integer.parseInt(startHoursSpinner.getEditor().getText() + "") * hourInSeconds
                 + Integer.parseInt(startMinutesSpinner.getEditor().getText() + "") * minuteInSeconds
         );
-        endDate = new Date(startDate.getTime()
+        endDate = new Date(endDate.getTime()
                 + Integer.parseInt(endHoursSpinner.getEditor().getText() + "") * hourInSeconds
                 + Integer.parseInt(endMinutesSpinner.getEditor().getText() + "") * minuteInSeconds
         );
