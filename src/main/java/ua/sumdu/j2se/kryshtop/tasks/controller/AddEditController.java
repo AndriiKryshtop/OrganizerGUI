@@ -85,9 +85,11 @@ public class AddEditController {
 
     private final int hoursMaxValue = 23;
     private final int minutesMaxValue = 59;
+
     private final int dayInSeconds = 86400;
     private final int hourInSeconds = 3600;
     private final int minuteInSeconds = 60;
+
     private final int hourInMilSeconds = 3600000;
     private final int minuteInMilSeconds = 60000;
 
@@ -246,10 +248,10 @@ public class AddEditController {
             if (repeat.getSelectedToggle() == repeatableRadioButton) {
                 task = getRepeatableTaskFromInputFields();
             } else {
-                Date timeDate = Date.from(startDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                Date timeDate = Date.from(timeDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
                 timeDate = new Date(timeDate.getTime()
-                        + Integer.parseInt(endHoursSpinner.getEditor().getText() + "") * hourInSeconds
-                        + Integer.parseInt(endMinutesSpinner.getEditor().getText() + "") * minuteInSeconds
+                        + Integer.parseInt(timeHoursSpinner.getEditor().getText() + "") * hourInMilSeconds
+                        + Integer.parseInt(timeMinutesSpinner.getEditor().getText() + "") * minuteInMilSeconds
                 );
 
                 task = new Task(title.getText(), timeDate);
@@ -407,12 +409,12 @@ public class AddEditController {
         Date endDate = Date.from(endDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
 
         startDate = new Date(startDate.getTime()
-                + Integer.parseInt(startHoursSpinner.getEditor().getText() + "") * hourInSeconds
-                + Integer.parseInt(startMinutesSpinner.getEditor().getText() + "") * minuteInSeconds
+                + Integer.parseInt(startHoursSpinner.getEditor().getText() + "") * hourInMilSeconds
+                + Integer.parseInt(startMinutesSpinner.getEditor().getText() + "") * minuteInMilSeconds
         );
         endDate = new Date(endDate.getTime()
-                + Integer.parseInt(endHoursSpinner.getEditor().getText() + "") * hourInSeconds
-                + Integer.parseInt(endMinutesSpinner.getEditor().getText() + "") * minuteInSeconds
+                + Integer.parseInt(endHoursSpinner.getEditor().getText() + "") * hourInMilSeconds
+                + Integer.parseInt(endMinutesSpinner.getEditor().getText() + "") * minuteInMilSeconds
         );
 
         return new Task(title.getText(), startDate, endDate, interval);
