@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import ua.sumdu.j2se.kryshtop.tasks.MainApp;
 import ua.sumdu.j2se.kryshtop.tasks.model.Task;
-import ua.sumdu.j2se.kryshtop.tasks.util.Tasks;
+import ua.sumdu.j2se.kryshtop.tasks.model.util.Tasks;
 
 import java.time.LocalDate;
 import java.time.ZoneId;

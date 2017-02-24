@@ -1,4 +1,4 @@
-package ua.sumdu.j2se.kryshtop.tasks.util;
+package ua.sumdu.j2se.kryshtop.tasks.model.util;
 
 import ua.sumdu.j2se.kryshtop.tasks.model.ArrayTaskList;
 import ua.sumdu.j2se.kryshtop.tasks.model.Task;

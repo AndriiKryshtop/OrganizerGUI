@@ -83,15 +83,15 @@ public class AddEditController {
     @FXML
     private Button cancelButton;
 
-    private final int hoursMaxValue = 23;
-    private final int minutesMaxValue = 59;
+    private static final int hoursMaxValue = 23;
+    private static final int minutesMaxValue = 59;
 
-    private final int dayInSeconds = 86400;
-    private final int hourInSeconds = 3600;
-    private final int minuteInSeconds = 60;
+    private static final int dayInSeconds = 86400;
+    private static final int hourInSeconds = 3600;
+    private static final int minuteInSeconds = 60;
 
-    private final int hourInMilSeconds = 3600000;
-    private final int minuteInMilSeconds = 60000;
+    private static final int hourInMilSeconds = 3600000;
+    private static final int minuteInMilSeconds = 60000;
 
     @SuppressWarnings({"unchecked", "unused"})
     @FXML
@@ -332,11 +332,9 @@ public class AddEditController {
         long timeOfStartTime = date.getTime()
                 - Date.from(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime();
 
-        int hourInMilSeconds = 3600000;
         hoursSpinner.getEditor().setText(timeOfStartTime / hourInMilSeconds + "");
         timeOfStartTime = timeOfStartTime % hourInMilSeconds;
 
-        int minuteInMilSeconds = 60000;
         minutesSpinner.getEditor().setText(timeOfStartTime / minuteInMilSeconds + "");
     }
 

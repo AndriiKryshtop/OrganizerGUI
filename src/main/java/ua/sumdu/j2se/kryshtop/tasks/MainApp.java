@@ -17,25 +17,26 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ua.sumdu.j2se.kryshtop.tasks.controller.NotificationSystem;
 import ua.sumdu.j2se.kryshtop.tasks.model.ArrayTaskList;
 import ua.sumdu.j2se.kryshtop.tasks.model.Task;
 import ua.sumdu.j2se.kryshtop.tasks.model.TaskList;
 import ua.sumdu.j2se.kryshtop.tasks.view.Alerts;
-import ua.sumdu.j2se.kryshtop.tasks.util.TaskIO;
+import ua.sumdu.j2se.kryshtop.tasks.model.util.TaskIO;
 
 public class MainApp extends Application {
+
+    private static Stage primaryStage;
+
+    private static final ObservableList<Task> taskData = FXCollections.observableArrayList();
+
+    private static String readFilesErrorMassage;
+
+    private static int createFilesIndicator;
 
     private final File binFile = new File(System.getProperty("user.dir") + "/src/main/resources/files/tasks.bin");
 
     private final File textFile = new File(System.getProperty("user.dir") + "/src/main/resources/files/tasks.txt");
-
-    private static final ObservableList<Task> taskData = FXCollections.observableArrayList();
-
-    private static Stage primaryStage;
-
-    private static String readFilesErrorMassage;
-    
-    private static int createFilesIndicator;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -65,6 +66,9 @@ public class MainApp extends Application {
 
         primaryStage = stage;
         primaryStage.show();
+
+        NotificationSystem notificationSystem = new NotificationSystem();
+        notificationSystem.startNotificationSystem();
     }
 
     private void showLoadFilesMassage() {
@@ -127,7 +131,7 @@ public class MainApp extends Application {
         }
 
         if (arrayTaskList.equals(new ArrayTaskList())) {
-            if(!textFile.exists()){
+            if (!textFile.exists()) {
                 //TODO: print to log
                 try {
                     if (!textFile.createNewFile()) {
