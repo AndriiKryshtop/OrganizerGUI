@@ -11,10 +11,12 @@ import ua.sumdu.j2se.kryshtop.tasks.view.Alerts;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date;
+import java.util.*;
 
 @SuppressWarnings({"CanBeFinal", "unused"})
-public class AddEditController {
+public class AddEditController extends Observable{
+    private static List<Observer> observers = new ArrayList<>();
+
     static int taskId;
 
     @FXML
@@ -263,6 +265,8 @@ public class AddEditController {
 
             MainApp.getTaskData().add(task);
 
+            notifyObservers();
+
             Stage stage = (Stage) okButton.getScene().getWindow();
             stage.close();
             MainApp.getPrimaryStage().show();
@@ -273,6 +277,17 @@ public class AddEditController {
             stage.close();
             MainApp.getPrimaryStage().show();
         });
+    }
+
+    static void addObserverStatic(Observer observer){
+        observers.add(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for(Observer observer : observers){
+            observer.update(this, true);
+        }
     }
 
     private void substituteData(int taskId) {

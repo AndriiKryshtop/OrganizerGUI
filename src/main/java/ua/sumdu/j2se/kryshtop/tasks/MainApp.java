@@ -17,6 +17,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ua.sumdu.j2se.kryshtop.tasks.controller.AddEditController;
+import ua.sumdu.j2se.kryshtop.tasks.controller.MainController;
 import ua.sumdu.j2se.kryshtop.tasks.controller.NotificationSystem;
 import ua.sumdu.j2se.kryshtop.tasks.model.ArrayTaskList;
 import ua.sumdu.j2se.kryshtop.tasks.model.Task;
@@ -24,11 +26,11 @@ import ua.sumdu.j2se.kryshtop.tasks.model.TaskList;
 import ua.sumdu.j2se.kryshtop.tasks.view.Alerts;
 import ua.sumdu.j2se.kryshtop.tasks.model.util.TaskIO;
 
-public class MainApp extends Application {
-
-    private static Stage primaryStage;
+public class MainApp extends Application{
 
     private static final ObservableList<Task> taskData = FXCollections.observableArrayList();
+
+    private static Stage primaryStage;
 
     private static String readFilesErrorMassage;
 
@@ -89,7 +91,7 @@ public class MainApp extends Application {
     public void stop() {
         TaskList arrayTaskList = new ArrayTaskList();
 
-        taskData.forEach(arrayTaskList::add);
+        MainApp.taskData.forEach(arrayTaskList::add);
 
         try {
             TaskIO.writeBinary(arrayTaskList, binFile);
@@ -155,15 +157,15 @@ public class MainApp extends Application {
         }
 
         for (Task task : arrayTaskList) {
-            getTaskData().add(task);
+            MainApp.getTaskData().add(task);
         }
-    }
-
-    public static ObservableList<Task> getTaskData() {
-        return taskData;
     }
 
     public static Stage getPrimaryStage() {
         return primaryStage;
+    }
+
+    public static ObservableList<Task> getTaskData() {
+        return taskData;
     }
 }

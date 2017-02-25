@@ -1,6 +1,7 @@
 package ua.sumdu.j2se.kryshtop.tasks.view;
 
 import javafx.scene.control.Alert;
+import javafx.stage.Modality;
 
 public class Alerts {
 
@@ -25,6 +26,15 @@ public class Alerts {
         alert.setTitle("Information Dialog");
         alert.setHeaderText(null);
         alert.setContentText(contentText);
+        alert.showAndWait();
+    }
+
+    public static void showInformationAlert(String contentText, String headerText) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information Dialog");
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+        alert.initModality(Modality.WINDOW_MODAL);
         alert.showAndWait();
     }
 }

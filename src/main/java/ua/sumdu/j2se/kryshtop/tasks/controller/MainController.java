@@ -17,10 +17,13 @@ import ua.sumdu.j2se.kryshtop.tasks.model.Task;
 import ua.sumdu.j2se.kryshtop.tasks.view.Alerts;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.util.*;
 
 @SuppressWarnings({"CanBeFinal", "unused"})
-public class MainController {
+public class MainController extends Observable{
+
+    private static List<Observer> observers = new ArrayList<>();
+
     @FXML
     private Button calendarButton;
 
@@ -183,10 +186,22 @@ public class MainController {
                 //noinspection OptionalGetWithoutIsPresent
                 if (result.get() == ButtonType.OK) {
                     MainApp.getTaskData().remove(mainTable.getSelectionModel().getSelectedIndex());
+                    notifyObservers();
                 }
             } else {
                 Alerts.showInformationAlert("Choose task before pressing \"delete\" button!");
             }
         });
+    }
+
+    static void addObserverStatic(Observer observer){
+        observers.add(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for(Observer observer : observers){
+            observer.update(this, true);
+        }
     }
 }
