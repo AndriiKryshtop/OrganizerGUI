@@ -93,7 +93,7 @@ public class NotificationSystem implements Observer {
                 //adding task information to notification massage
                 notificationMassage += task.getTitle() + " at " + date + "\n";
             }
-            //making effectively final variable for lambda
+            //making effectively final variable for lambda expression below
             String finalNotificationMassage = notificationMassage;
 
             //show notification in main(javafx) thread

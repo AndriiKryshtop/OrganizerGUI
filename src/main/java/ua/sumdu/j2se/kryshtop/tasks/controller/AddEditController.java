@@ -185,6 +185,9 @@ public class AddEditController extends Observable{
         okButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             Task task;
 
+            //delete spaces in beginning and in the end of the entered title
+            String taskTitle = title.getText().trim();
+
             //check: are values in time spinners correct
             if (repeat.getSelectedToggle() == unRepeatableRadioButton) {
                 if (unrepeatableTimeSpinnersCheck() == -1) return;
@@ -238,17 +241,18 @@ public class AddEditController extends Observable{
             }
 
             //check: is title empty
-            if (title.getText().compareTo("") == 0) {
+            if (taskTitle.compareTo("") == 0) {
                 Alerts.showInformationAlert("You must enter a title!");
                 return;
             }
+
 
             if (taskId != -1) {
                 MainApp.getTaskData().remove(taskId);
             }
 
             if (repeat.getSelectedToggle() == repeatableRadioButton) {
-                task = getRepeatableTaskFromInputFields();
+                task = getRepeatableTaskFromInputFields(taskTitle);
             } else {
                 Date timeDate = Date.from(timeDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
                 timeDate = new Date(timeDate.getTime()
@@ -256,7 +260,7 @@ public class AddEditController extends Observable{
                         + Integer.parseInt(timeMinutesSpinner.getEditor().getText() + "") * minuteInMilSeconds
                 );
 
-                task = new Task(title.getText(), timeDate);
+                task = new Task(taskTitle, timeDate);
             }
 
             if (activity.getSelectedToggle() == activeRadioButton) {
@@ -405,13 +409,13 @@ public class AddEditController extends Observable{
                 throw new NumberFormatException("interval seconds spinner");
             }
         } catch (NumberFormatException exception) {
-            Alerts.showInformationAlert("You have entered a wrong value in " + exception.getMessage());
+            Alerts.showInformationAlert("You have entered a wrong value in one of the time spinners");
             return -1;
         }
         return 0;
     }
 
-    private Task getRepeatableTaskFromInputFields(){
+    private Task getRepeatableTaskFromInputFields(String title){
         int interval;
         interval = Integer.parseInt(daysSpinner.getEditor().getText() + "") * dayInSeconds
                 + Integer.parseInt(hoursSpinner.getEditor().getText() + "") * hourInSeconds
@@ -430,6 +434,6 @@ public class AddEditController extends Observable{
                 + Integer.parseInt(endMinutesSpinner.getEditor().getText() + "") * minuteInMilSeconds
         );
 
-        return new Task(title.getText(), startDate, endDate, interval);
+        return new Task(title, startDate, endDate, interval);
     }
 }

@@ -12,6 +12,8 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ua.sumdu.j2se.kryshtop.tasks.MainApp;
 import ua.sumdu.j2se.kryshtop.tasks.model.Task;
 import ua.sumdu.j2se.kryshtop.tasks.view.Alerts;
@@ -21,6 +23,8 @@ import java.util.*;
 
 @SuppressWarnings({"CanBeFinal", "unused"})
 public class MainController extends Observable{
+
+    private static final Logger logger = LoggerFactory.getLogger(MainApp.class);
 
     private static List<Observer> observers = new ArrayList<>();
 
@@ -92,9 +96,9 @@ public class MainController extends Observable{
                     stage.setTitle("Calendar");
                     stage.setResizable(false);
                     stage.show();
-                } catch (IOException exception) {
-                    exception.printStackTrace(); //TODO: print to log
-                    Alerts.showErrorAlert("Could not find file Calendar.fxml! \n You can watch details in log.");
+                } catch (IOException ioException) {
+                    logger.error("Can't load Calendar.fxml. Get an exception" + ioException.toString());
+                    Alerts.showErrorAlert("Can't load Calendar.fxml! \n You can watch details in log.");
                     MainApp.getPrimaryStage().close();
                 }
 
@@ -102,12 +106,15 @@ public class MainController extends Observable{
             }
         });
 
-        addNewTaskButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+        addNewTaskButton.addEventHandler(
+                MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 AddEditController.taskId = -1;
                 try {
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/AddEdit.fxml"));
+                    FXMLLoader fxmlLoader =
+                            new FXMLLoader(getClass().getResource("/fxml/AddEdit.fxml"));
+
                     Parent root = fxmlLoader.load();
 
                     Stage stage = new Stage();
@@ -121,10 +128,11 @@ public class MainController extends Observable{
                     stage.setTitle("Add new task");
                     stage.setResizable(false);
                     stage.show();
-                } catch (IOException exception) {
-                    exception.printStackTrace(); //TODO: print to log
+                } catch (IOException ioException) {
+                    logger.error("Can't load AddEdit.fxml" + ioException.toString());
 
-                    Alerts.showErrorAlert("Could not find file AddEdit.fxml! \n You can watch details in log.");
+                    Alerts.showErrorAlert("Can't load AddEdit.fxml! " +
+                            "\n You can watch details in log.");
 
                     MainApp.getPrimaryStage().close();
                 }
@@ -133,13 +141,16 @@ public class MainController extends Observable{
             }
         });
 
-        editButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+        editButton.addEventHandler(
+                MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (mainTable.getSelectionModel().getSelectedIndex() != -1) {
                     AddEditController.taskId = mainTable.getSelectionModel().getSelectedIndex();
                     try {
-                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/AddEdit.fxml"));
+                        FXMLLoader fxmlLoader =
+                                new FXMLLoader(getClass().getResource("/fxml/AddEdit.fxml"));
+
                         Parent root = fxmlLoader.load();
 
                         Stage stage = new Stage();
@@ -155,10 +166,12 @@ public class MainController extends Observable{
                         stage.setTitle("Edit task");
                         stage.setResizable(false);
                         stage.show();
-                    } catch (IOException exception) {
-                        exception.printStackTrace(); //TODO: print to log
+                    } catch (IOException ioException) {
+                        logger.error("Can't load AddEdit.fxml. Get an exception:\n"
+                                + ioException.toString());
 
-                        Alerts.showErrorAlert("Could not find file AddEdit.fxml! \n You can watch details in log.");
+                        Alerts.showErrorAlert("Could not find file AddEdit.fxml! " +
+                                "\n You can watch details in log.");
 
                         MainApp.getPrimaryStage().close();
                     }

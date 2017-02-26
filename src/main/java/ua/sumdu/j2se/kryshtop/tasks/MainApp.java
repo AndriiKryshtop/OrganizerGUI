@@ -15,10 +15,9 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 import javafx.stage.WindowEvent;
+import org.apache.log4j.BasicConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ua.sumdu.j2se.kryshtop.tasks.controller.AddEditController;
-import ua.sumdu.j2se.kryshtop.tasks.controller.MainController;
 import ua.sumdu.j2se.kryshtop.tasks.controller.NotificationSystem;
 import ua.sumdu.j2se.kryshtop.tasks.model.ArrayTaskList;
 import ua.sumdu.j2se.kryshtop.tasks.model.Task;
@@ -26,7 +25,9 @@ import ua.sumdu.j2se.kryshtop.tasks.model.TaskList;
 import ua.sumdu.j2se.kryshtop.tasks.view.Alerts;
 import ua.sumdu.j2se.kryshtop.tasks.model.util.TaskIO;
 
-public class MainApp extends Application{
+public class MainApp extends Application {
+
+    private static final Logger logger = LoggerFactory.getLogger(MainApp.class);
 
     private static final ObservableList<Task> taskData = FXCollections.observableArrayList();
 
@@ -34,7 +35,7 @@ public class MainApp extends Application{
 
     private static String readFilesErrorMassage;
 
-    private static int createFilesIndicator;
+    private static int createFilesIndicator = 0;
 
     private final File binFile = new File(System.getProperty("user.dir") + "/src/main/resources/files/tasks.bin");
 
@@ -43,9 +44,6 @@ public class MainApp extends Application{
     @Override
     public void start(Stage stage) throws Exception {
         showLoadFilesMassage();
-
-        Logger logger = LoggerFactory.getLogger(MainApp.class);
-        logger.info("Hello World");
 
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/Main.fxml"));
         stage.setTitle("Organizer");
@@ -96,29 +94,36 @@ public class MainApp extends Application{
         try {
             TaskIO.writeBinary(arrayTaskList, binFile);
         } catch (IOException writeBinException) {
-            writeBinException.printStackTrace(); //TODO: print to LOG
+            logger.warn("Can't to write into bin file. Get an exception:\n"
+                    + writeBinException.toString());
         }
 
         try {
             TaskIO.writeText(arrayTaskList, textFile);
         } catch (IOException writeTxtException) {
-            writeTxtException.printStackTrace(); //TODO: print to LOG
+            logger.warn("Can't to write into bin file. Get an exception:\n"
+                    + writeTxtException.toString());
         }
     }
 
     @Override
     public void init() {
+
         TaskList arrayTaskList = new ArrayTaskList();
 
         if (!binFile.exists()) {
-            //TODO: print to log
+            logger.info("Bin file don't exist.");
+
             try {
                 if (!binFile.createNewFile()) {
+                    logger.warn("Cant to create bin file.");
                     readFilesErrorMassage += "Can't to create tasks.bin!\n";
                     createFilesIndicator++;
                 }
             } catch (IOException createBinException) {
-                createBinException.printStackTrace(); //TODO: print to log
+                logger.warn("Can't create bin file. Get an exception:\n"
+                        + createBinException.toString());
+
                 readFilesErrorMassage += "Can't to create tasks.bin!\n";
                 createFilesIndicator++;
             }
@@ -126,22 +131,28 @@ public class MainApp extends Application{
             try {
                 TaskIO.readBinary(arrayTaskList, binFile);
             } catch (Exception readBinException) {
-                readBinException.printStackTrace(); //TODO: print to log
+                logger.warn("Can't read bin file. Get an exception:\n"
+                        + readBinException.toString());
+
                 readFilesErrorMassage += "Can't to read tasks.bin!\n";
                 createFilesIndicator++;
             }
         }
 
-        if (arrayTaskList.equals(new ArrayTaskList())) {
+        if (createFilesIndicator > 0) {
             if (!textFile.exists()) {
-                //TODO: print to log
+                logger.info("Txt file don't exist.");
+
                 try {
                     if (!textFile.createNewFile()) {
+                        logger.warn("Can't to create txt file.");
                         readFilesErrorMassage += "Can't to create tasks.txt!\n";
                         createFilesIndicator++;
                     }
                 } catch (IOException txtReadException) {
-                    txtReadException.printStackTrace(); //TODO: print to log
+                    logger.warn("Can't to create txt file. Get an exception:\n"
+                            + txtReadException.toString());
+
                     readFilesErrorMassage += "Can't to create tasks.txt!\n";
                     createFilesIndicator++;
                 }
@@ -149,7 +160,9 @@ public class MainApp extends Application{
                 try {
                     TaskIO.readText(arrayTaskList, textFile);
                 } catch (Exception readTxtException) {
-                    readTxtException.printStackTrace(); //TODO: print to log
+                    logger.warn("Can't read txt file. Get an exception:\n"
+                            + readTxtException.toString());
+
                     readFilesErrorMassage += "Can't read tasks.txt!\n";
                     createFilesIndicator++;
                 }
