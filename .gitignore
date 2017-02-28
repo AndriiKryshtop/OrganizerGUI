@@ -1,5 +1,5 @@
 # Idea-related stuff
-.idea/**/libraries
+.idea/libraries
 .idea
 *.iml
 *.ipr
