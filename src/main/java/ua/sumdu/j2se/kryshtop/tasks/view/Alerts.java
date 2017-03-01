@@ -1,7 +1,12 @@
 package ua.sumdu.j2se.kryshtop.tasks.view;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Modality;
+import javafx.stage.WindowEvent;
+import ua.sumdu.j2se.kryshtop.tasks.MainApp;
+
+import java.util.Optional;
 
 public class Alerts {
 
@@ -29,12 +34,23 @@ public class Alerts {
         alert.showAndWait();
     }
 
-    public static void showInformationAlert(String contentText, String headerText) {
+    public static void showNotificationAlert(String contentText) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Information Dialog");
-        alert.setHeaderText(headerText);
+        alert.setHeaderText("Don't forget!");
         alert.setContentText(contentText);
         alert.initModality(Modality.WINDOW_MODAL);
         alert.showAndWait();
+    }
+
+    public static boolean showConfirmationDialog(String headerText, String contentText){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete task");
+        alert.setHeaderText(headerText);
+        alert.setContentText(contentText);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        //noinspection OptionalGetWithoutIsPresent
+        return result.get() == ButtonType.OK;
     }
 }

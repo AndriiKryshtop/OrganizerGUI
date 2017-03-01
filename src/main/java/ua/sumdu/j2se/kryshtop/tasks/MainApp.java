@@ -2,7 +2,6 @@ package ua.sumdu.j2se.kryshtop.tasks;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Optional;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -10,12 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
-
-import javafx.stage.WindowEvent;
-import org.apache.log4j.BasicConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ua.sumdu.j2se.kryshtop.tasks.controller.NotificationSystem;
@@ -31,15 +25,13 @@ public class MainApp extends Application {
 
     private static final ObservableList<Task> taskData = FXCollections.observableArrayList();
 
-    private static Stage primaryStage;
-
     private static String readFilesErrorMassage;
 
     private static int createFilesIndicator = 0;
 
-    private final File binFile = new File(System.getProperty("user.dir") + "/src/main/resources/files/tasks.bin");
+    private final File binFile = new File(System.getProperty("user.dir") + "/tasks.bin");
 
-    private final File textFile = new File(System.getProperty("user.dir") + "/src/main/resources/files/tasks.txt");
+    private final File textFile = new File(System.getProperty("user.dir") + "/tasks.txt");
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -51,24 +43,17 @@ public class MainApp extends Application {
         stage.setMinHeight(418);
         stage.setScene(new Scene(root));
 
-        stage.setOnCloseRequest((WindowEvent event) -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation Dialog");
-            alert.setHeaderText("");
-            alert.setContentText("Are you really want to exit?");
-
-            Optional<ButtonType> result = alert.showAndWait();
-            //noinspection OptionalGetWithoutIsPresent
-            if (result.get() != ButtonType.OK) {
+        stage.setOnCloseRequest((event) -> {
+            if (!Alerts.showConfirmationDialog(null, "Are you really want to exit?")) {
                 event.consume();
             }
         });
 
-        primaryStage = stage;
-        primaryStage.show();
+        stage.show();
 
         NotificationSystem notificationSystem = new NotificationSystem();
         notificationSystem.startNotificationSystem();
+        logger.info("Notification system started.");
     }
 
     private void showLoadFilesMassage() {
@@ -104,10 +89,13 @@ public class MainApp extends Application {
             logger.warn("Can't to write into bin file. Get an exception:\n"
                     + writeTxtException.toString());
         }
+
+        logger.info("Application finished.");
     }
 
     @Override
     public void init() {
+        logger.info("Application started.");
 
         TaskList arrayTaskList = new ArrayTaskList();
 
@@ -172,10 +160,6 @@ public class MainApp extends Application {
         for (Task task : arrayTaskList) {
             MainApp.getTaskData().add(task);
         }
-    }
-
-    public static Stage getPrimaryStage() {
-        return primaryStage;
     }
 
     public static ObservableList<Task> getTaskData() {

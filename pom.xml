@@ -47,6 +47,8 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+
+
         </plugins>
 
     </build>
@@ -73,6 +75,19 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.24</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.puppycrawl.tools</groupId>
+            <artifactId>checkstyle</artifactId>
+            <version>7.5.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <version>3.7</version>
+        </dependency>
+
 
     </dependencies>
 

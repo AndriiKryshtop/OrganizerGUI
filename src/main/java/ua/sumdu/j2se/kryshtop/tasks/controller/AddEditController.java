@@ -14,7 +14,7 @@ import java.time.ZoneId;
 import java.util.*;
 
 @SuppressWarnings({"CanBeFinal", "unused"})
-public class AddEditController extends Observable{
+public class AddEditController extends Observable {
     private static List<Observer> observers = new ArrayList<>();
 
     static int taskId;
@@ -188,6 +188,12 @@ public class AddEditController extends Observable{
             //delete spaces in beginning and in the end of the entered title
             String taskTitle = title.getText().trim();
 
+            //check: is title empty
+            if (taskTitle.compareTo("") == 0) {
+                Alerts.showInformationAlert("You must enter a title!");
+                return;
+            }
+
             //check: are values in time spinners correct
             if (repeat.getSelectedToggle() == unRepeatableRadioButton) {
                 if (unrepeatableTimeSpinnersCheck() == -1) return;
@@ -208,27 +214,6 @@ public class AddEditController extends Observable{
                 return;
             }
 
-            // check: is "start time" or "time" equal or less then current (real) time
-            if (repeat.getSelectedToggle() == repeatableRadioButton) {
-                if (new Date().compareTo(new Date(
-                        Date.from(startDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime()
-                                + Integer.parseInt(startHoursSpinner.getEditor().getText() + "") * hourInMilSeconds
-                                + Integer.parseInt(startMinutesSpinner.getEditor().getText() + "") * minuteInMilSeconds))
-                        == 1) {
-                    Alerts.showInformationAlert("Start time can not be earlier than to current (real) time!");
-                    return;
-                }
-            } else {
-                if (new Date().compareTo(new Date(
-                        Date.from(timeDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime()
-                                + Integer.parseInt(timeHoursSpinner.getEditor().getText() + "") * hourInMilSeconds
-                                + Integer.parseInt(timeMinutesSpinner.getEditor().getText() + "") * minuteInMilSeconds))
-                        == 1) {
-                    Alerts.showInformationAlert("Time can not be earlier than or equal to current time!");
-                    return;
-                }
-            }
-
             //check: is interval equals 0
             if (repeat.getSelectedToggle() == repeatableRadioButton
                     && Integer.parseInt(daysSpinner.getEditor().getText() + "") == 0
@@ -240,12 +225,30 @@ public class AddEditController extends Observable{
                 return;
             }
 
-            //check: is title empty
-            if (taskTitle.compareTo("") == 0) {
-                Alerts.showInformationAlert("You must enter a title!");
-                return;
+            // check: is "start time" or "time" equal or less then current (real) time
+            if (repeat.getSelectedToggle() == repeatableRadioButton) {
+                if (new Date().compareTo(new Date(
+                        Date.from(endDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime()
+                                + Integer.parseInt(endHoursSpinner.getEditor().getText() + "") * hourInMilSeconds
+                                + Integer.parseInt(endMinutesSpinner.getEditor().getText() + "") * minuteInMilSeconds))
+                        == 1) {
+                    if (!Alerts.showConfirmationDialog(null, "End time is earlier than or equal to current (real) time.\n" +
+                            "Are you really want to add(edit) this task?")) {
+                        return;
+                    }
+                }
+            } else {
+                if (new Date().compareTo(new Date(
+                        Date.from(timeDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime()
+                                + Integer.parseInt(timeHoursSpinner.getEditor().getText() + "") * hourInMilSeconds
+                                + Integer.parseInt(timeMinutesSpinner.getEditor().getText() + "") * minuteInMilSeconds))
+                        == 1) {
+                    if (!Alerts.showConfirmationDialog(null, "Time is earlier than or equal to to current time.\n" +
+                            "Are you really want to add(edit) this task?")) {
+                        return;
+                    }
+                }
             }
-
 
             if (taskId != -1) {
                 MainApp.getTaskData().remove(taskId);
@@ -254,7 +257,9 @@ public class AddEditController extends Observable{
             if (repeat.getSelectedToggle() == repeatableRadioButton) {
                 task = getRepeatableTaskFromInputFields(taskTitle);
             } else {
-                Date timeDate = Date.from(timeDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                Date timeDate = Date.from(
+                        timeDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+
                 timeDate = new Date(timeDate.getTime()
                         + Integer.parseInt(timeHoursSpinner.getEditor().getText() + "") * hourInMilSeconds
                         + Integer.parseInt(timeMinutesSpinner.getEditor().getText() + "") * minuteInMilSeconds
@@ -273,23 +278,21 @@ public class AddEditController extends Observable{
 
             Stage stage = (Stage) okButton.getScene().getWindow();
             stage.close();
-            MainApp.getPrimaryStage().show();
         });
 
         cancelButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             Stage stage = (Stage) cancelButton.getScene().getWindow();
             stage.close();
-            MainApp.getPrimaryStage().show();
         });
     }
 
-    static void addObserverStatic(Observer observer){
+    static void addObserverStatic(Observer observer) {
         observers.add(observer);
     }
 
     @Override
     public void notifyObservers() {
-        for(Observer observer : observers){
+        for (Observer observer : observers) {
             observer.update(this, true);
         }
     }
@@ -374,7 +377,7 @@ public class AddEditController extends Observable{
         return 0;
     }
 
-    private int repeatableTimeSpinnersCheck(){
+    private int repeatableTimeSpinnersCheck() {
         try {
             if (Integer.parseInt(startHoursSpinner.getEditor().getText() + "") < 0 ||
                     Integer.parseInt(startHoursSpinner.getEditor().getText() + "") > hoursMaxValue) {
@@ -415,7 +418,7 @@ public class AddEditController extends Observable{
         return 0;
     }
 
-    private Task getRepeatableTaskFromInputFields(String title){
+    private Task getRepeatableTaskFromInputFields(String title) {
         int interval;
         interval = Integer.parseInt(daysSpinner.getEditor().getText() + "") * dayInSeconds
                 + Integer.parseInt(hoursSpinner.getEditor().getText() + "") * hourInSeconds

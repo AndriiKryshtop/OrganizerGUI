@@ -1,6 +1,8 @@
 package ua.sumdu.j2se.kryshtop.tasks.controller;
 
 import javafx.application.Platform;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ua.sumdu.j2se.kryshtop.tasks.MainApp;
 import ua.sumdu.j2se.kryshtop.tasks.model.Task;
 import ua.sumdu.j2se.kryshtop.tasks.model.util.Tasks;
@@ -10,6 +12,8 @@ import java.util.*;
 
 public class NotificationSystem implements Observer {
 
+    private static final Logger logger = LoggerFactory.getLogger(MainApp.class);
+
     private static final int MIL_SECONDS_IN_MINUTE = 60000;
 
     private static final int MIL_SECONDS_IN_SECOND = 1000;
@@ -18,7 +22,7 @@ public class NotificationSystem implements Observer {
 
     private Map<Date, Set<Task>> scheduledTasks;
 
-    private Date dateMaxValue = new Date(Long.MAX_VALUE);
+    private final Date dateMaxValue = new Date(Long.MAX_VALUE);
 
     private Date alreadyNotifiedDate;
 
@@ -43,7 +47,7 @@ public class NotificationSystem implements Observer {
                 scheduledTasks = Tasks.calendar(MainApp.getTaskData(), new Date(), dateMaxValue);
 
                 if (scheduledTasks.isEmpty()){
-                    Thread.sleep(10 * MIL_SECONDS_IN_SECOND);
+                    Thread.sleep(MIL_SECONDS_IN_SECOND);
                     continue;
                 }
 
@@ -57,7 +61,7 @@ public class NotificationSystem implements Observer {
                 notifyingUser();
             }
         } catch (InterruptedException exception) {
-            exception.printStackTrace(); //TODO: print to log
+            logger.error("Notification system error. Get an exception:\n" + exception.toString());
             Alerts.showErrorAlert("Notification system error. Please restart program to be notified.");
         }
 
@@ -80,7 +84,7 @@ public class NotificationSystem implements Observer {
 
                 //waite while time(Date) of notification came
                 do {
-                    Thread.sleep(10 * MIL_SECONDS_IN_SECOND);
+                    Thread.sleep(MIL_SECONDS_IN_SECOND);
 
                     //check whether the observable objects updated
                     if (updateIndicator) {
@@ -97,7 +101,7 @@ public class NotificationSystem implements Observer {
             String finalNotificationMassage = notificationMassage;
 
             //show notification in main(javafx) thread
-            Platform.runLater(() -> Alerts.showInformationAlert(finalNotificationMassage, "Don't forget!"));
+            Platform.runLater(() -> Alerts.showNotificationAlert(finalNotificationMassage));
 
             alreadyNotifiedDate = date;
         }

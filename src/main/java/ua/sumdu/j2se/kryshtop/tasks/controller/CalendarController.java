@@ -1,3 +1,4 @@
+
 package ua.sumdu.j2se.kryshtop.tasks.controller;
 
 import javafx.collections.FXCollections;
@@ -17,7 +18,7 @@ import java.time.ZoneId;
 import java.util.*;
 
 @SuppressWarnings({"CanBeFinal", "unused"})
-public class CalendarController {
+public class CalendarController{
     private final ObservableList<Task> calendarTaskList = FXCollections.observableArrayList();
 
     @FXML
@@ -100,7 +101,6 @@ public class CalendarController {
         backButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             Stage stage = (Stage) backButton.getScene().getWindow();
             stage.close();
-            MainApp.getPrimaryStage().show();
         });
     }
 

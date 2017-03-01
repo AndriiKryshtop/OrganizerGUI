@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ import java.io.IOException;
 import java.util.*;
 
 @SuppressWarnings({"CanBeFinal", "unused"})
-public class MainController extends Observable{
+public class MainController extends Observable {
 
     private static final Logger logger = LoggerFactory.getLogger(MainApp.class);
 
@@ -88,117 +89,88 @@ public class MainController extends Observable{
                     Stage stage = new Stage();
                     stage.setScene(new Scene(root, 712, 405));
 
-                    stage.setOnCloseRequest(we -> {
-                        stage.close();
-                        MainApp.getPrimaryStage().show();
-                    });
-
                     stage.setTitle("Calendar");
                     stage.setResizable(false);
+                    stage.initModality(Modality.APPLICATION_MODAL);
                     stage.show();
                 } catch (IOException ioException) {
                     logger.error("Can't load Calendar.fxml. Get an exception" + ioException.toString());
                     Alerts.showErrorAlert("Can't load Calendar.fxml! \n You can watch details in log.");
-                    MainApp.getPrimaryStage().close();
                 }
-
-                MainApp.getPrimaryStage().close();
             }
         });
 
         addNewTaskButton.addEventHandler(
                 MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                AddEditController.taskId = -1;
-                try {
-                    FXMLLoader fxmlLoader =
-                            new FXMLLoader(getClass().getResource("/fxml/AddEdit.fxml"));
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        AddEditController.taskId = -1;
+                        try {
+                            FXMLLoader fxmlLoader =
+                                    new FXMLLoader(getClass().getResource("/fxml/AddEdit.fxml"));
 
-                    Parent root = fxmlLoader.load();
+                            Parent root = fxmlLoader.load();
 
-                    Stage stage = new Stage();
-                    stage.setScene(new Scene(root, 480, 334));
+                            Stage stage = new Stage();
+                            stage.setScene(new Scene(root, 494, 332));
 
-                    stage.setOnCloseRequest(windowEvent -> {
-                        stage.close();
-                        MainApp.getPrimaryStage().show();
-                    });
+                            stage.setTitle("Add new task");
+                            stage.setResizable(false);
+                            stage.initModality(Modality.APPLICATION_MODAL);
+                            stage.show();
+                        } catch (IOException ioException) {
+                            logger.error("Can't load AddEdit.fxml" + ioException.toString());
 
-                    stage.setTitle("Add new task");
-                    stage.setResizable(false);
-                    stage.show();
-                } catch (IOException ioException) {
-                    logger.error("Can't load AddEdit.fxml" + ioException.toString());
-
-                    Alerts.showErrorAlert("Can't load AddEdit.fxml! " +
-                            "\n You can watch details in log.");
-
-                    MainApp.getPrimaryStage().close();
-                }
-
-                MainApp.getPrimaryStage().close();
-            }
-        });
+                            Alerts.showErrorAlert("Can't load AddEdit.fxml! " +
+                                    "\n You can watch details in log.");
+                        }
+                    }
+                });
 
         editButton.addEventHandler(
                 MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (mainTable.getSelectionModel().getSelectedIndex() != -1) {
-                    AddEditController.taskId = mainTable.getSelectionModel().getSelectedIndex();
-                    try {
-                        FXMLLoader fxmlLoader =
-                                new FXMLLoader(getClass().getResource("/fxml/AddEdit.fxml"));
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        if (mainTable.getSelectionModel().getSelectedIndex() != -1) {
+                            AddEditController.taskId = mainTable.getSelectionModel().getSelectedIndex();
+                            try {
+                                FXMLLoader fxmlLoader =
+                                        new FXMLLoader(getClass().getResource("/fxml/AddEdit.fxml"));
 
-                        Parent root = fxmlLoader.load();
+                                Parent root = fxmlLoader.load();
 
-                        Stage stage = new Stage();
-                        stage.setScene(new Scene(root, 480, 334));
+                                Stage stage = new Stage();
+                                stage.setScene(new Scene(root, 494, 332));
 
-                        AddEditController.taskId = mainTable.getSelectionModel().getSelectedIndex();
+                                AddEditController.taskId = mainTable.getSelectionModel().getSelectedIndex();
 
-                        stage.setOnCloseRequest(we -> {
-                            stage.close();
-                            MainApp.getPrimaryStage().show();
-                        });
+                                stage.setTitle("Edit task");
+                                stage.setResizable(false);
+                                stage.initModality(Modality.APPLICATION_MODAL);
+                                stage.show();
+                            } catch (IOException ioException) {
+                                logger.error("Can't load AddEdit.fxml. Get an exception:\n"
+                                        + ioException.toString());
 
-                        stage.setTitle("Edit task");
-                        stage.setResizable(false);
-                        stage.show();
-                    } catch (IOException ioException) {
-                        logger.error("Can't load AddEdit.fxml. Get an exception:\n"
-                                + ioException.toString());
+                                Alerts.showErrorAlert("Could not find file AddEdit.fxml! " +
+                                        "\n You can watch details in log.");
+                            }
+                        } else {
+                            Alerts.showInformationAlert("Choose task before pressing \"edit\" button!");
+                        }
 
-                        Alerts.showErrorAlert("Could not find file AddEdit.fxml! " +
-                                "\n You can watch details in log.");
-
-                        MainApp.getPrimaryStage().close();
                     }
-
-                    MainApp.getPrimaryStage().close();
-                } else {
-                    Alerts.showInformationAlert("Choose task before pressing \"edit\" button!");
-                }
-
-            }
-        });
+                });
 
         deleteButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-            if (mainTable.getSelectionModel().getSelectedIndex() != -1) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Delete task");
-                alert.setHeaderText("Are you really wont to delete this task?");
-                alert.setContentText(
-                        MainApp.getTaskData().get(
-                                mainTable.getSelectionModel().getSelectedIndex()
-                        ).toString()
-                );
+            int selectedIndex = mainTable.getSelectionModel().getSelectedIndex();
 
-                Optional<ButtonType> result = alert.showAndWait();
-                //noinspection OptionalGetWithoutIsPresent
-                if (result.get() == ButtonType.OK) {
-                    MainApp.getTaskData().remove(mainTable.getSelectionModel().getSelectedIndex());
+            if (selectedIndex != -1) {
+                if (Alerts.showConfirmationDialog("Are you really wont to delete this task?",
+                        MainApp.getTaskData().get(selectedIndex).toString())
+                        ) {
+                    MainApp.getTaskData().remove(selectedIndex);
+
                     notifyObservers();
                 }
             } else {
@@ -207,13 +179,13 @@ public class MainController extends Observable{
         });
     }
 
-    static void addObserverStatic(Observer observer){
+    static void addObserverStatic(Observer observer) {
         observers.add(observer);
     }
 
     @Override
     public void notifyObservers() {
-        for(Observer observer : observers){
+        for (Observer observer : observers) {
             observer.update(this, true);
         }
     }
