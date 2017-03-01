@@ -25,6 +25,7 @@ import java.util.*;
 @SuppressWarnings({"CanBeFinal", "unused"})
 public class MainController extends Observable {
 
+    
     private static final Logger logger = LoggerFactory.getLogger(MainApp.class);
 
     private static List<Observer> observers = new ArrayList<>();

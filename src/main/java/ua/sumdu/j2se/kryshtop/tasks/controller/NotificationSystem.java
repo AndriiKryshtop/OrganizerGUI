@@ -14,8 +14,6 @@ public class NotificationSystem implements Observer {
 
     private static final Logger logger = LoggerFactory.getLogger(MainApp.class);
 
-    private static final int MIL_SECONDS_IN_MINUTE = 60000;
-
     private static final int MIL_SECONDS_IN_SECOND = 1000;
 
     private static boolean updateIndicator;
@@ -71,7 +69,7 @@ public class NotificationSystem implements Observer {
 
         //sort out dates in a map
         for (Date date : scheduledTasks.keySet()) {
-            Date notificationPeriodStart = new Date(date.getTime() - MIL_SECONDS_IN_MINUTE);
+            Date notificationPeriodStart = new Date(date.getTime() - 30 * MIL_SECONDS_IN_SECOND);
 
             String notificationMassage = "";
 
