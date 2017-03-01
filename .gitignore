@@ -1,0 +1,10 @@
+# Idea-related stuff
+.idea/libraries
+.idea
+*.iml
+*.ipr
+*.iws
+
+# Maven-related stuff
+**/target
+*.log
