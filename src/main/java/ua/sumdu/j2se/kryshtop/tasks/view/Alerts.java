@@ -3,8 +3,6 @@ package ua.sumdu.j2se.kryshtop.tasks.view;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Modality;
-import javafx.stage.WindowEvent;
-import ua.sumdu.j2se.kryshtop.tasks.MainApp;
 
 import java.util.Optional;
 

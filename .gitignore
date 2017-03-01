@@ -1,10 +1,10 @@
-# Idea-related stuff
-.idea/libraries
 .idea
 *.iml
 *.ipr
 *.iws
-
-# Maven-related stuff
-**/target
+/target
 *.log
+lab1.patch
+src/test/
+tasks.bin
+tasks.txt
