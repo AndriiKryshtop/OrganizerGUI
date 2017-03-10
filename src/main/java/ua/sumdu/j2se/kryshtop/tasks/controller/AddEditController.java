@@ -13,6 +13,9 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
+/**
+ * Controller class for Add and edit task dialog
+ */
 @SuppressWarnings({"CanBeFinal", "unused"})
 public class AddEditController extends Observable {
     private static List<Observer> observers = new ArrayList<>();
@@ -107,7 +110,7 @@ public class AddEditController extends Observable {
         initializeElements();
 
         okButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-            if (!addTask()){
+            if (!addTask()) {
                 return;
             }
 
@@ -134,53 +137,11 @@ public class AddEditController extends Observable {
         Boolean active;
         active = isRadioButtonChosen(activity, activeRadioButton);
 
-        int intervalDays = getIntFromSpinner(daysSpinner);
-        int intervalHours = getIntFromSpinner(hoursSpinner);
-        int intervalMinutes = getIntFromSpinner(minutesSpinner);
-        int intervalSeconds = getIntFromSpinner(secondsSpinner);
-
         //delete spaces in beginning and in the end of the entered title
         String taskTitle = title.getText().trim();
 
-        //check: is title empty
-        if (taskTitle.compareTo("") == 0) {
-            Alerts.showInformationAlert("You must enter a title!");
+        if (!checkIsEnteredDataCorrect(repeatable, taskTitle, startDate, endDate)) {
             return false;
-        }
-
-        //check: are values in time spinners correct
-        if (repeatable) {
-            if (!repeatableTimeSpinnersCheck()) return false;
-        } else {
-            if (!unrepeatableTimeSpinnersCheck()) return false;
-        }
-
-        // check: is end time equal or less then start time
-        if (repeatable && startDate.compareTo(endDate) >= 0) {
-            Alerts.showInformationAlert("End time can not be earlier than or equal to the start time!");
-            return false;
-        }
-
-        //check: is interval equals 0
-        if (repeatable
-                && intervalDays == 0
-                && intervalHours == 0
-                && intervalMinutes == 0
-                && intervalSeconds == 0
-                ) {
-            Alerts.showInformationAlert("Interval can't be 0 if task is repeatable!");
-            return false;
-        }
-
-        // check: is "start time" or "time" equal or less then current (real) time
-        if (repeatable) {
-            if (compareCurrentTimeTo(endDatePicker, endHoursSpinner, endMinutesSpinner, "End time") == -1) {
-                return false;
-            }
-        } else {
-            if (compareCurrentTimeTo(timeDatePicker, timeHoursSpinner, timeMinutesSpinner, "Time") == -1) {
-                return false;
-            }
         }
 
         if (taskId != -1) {
@@ -202,6 +163,69 @@ public class AddEditController extends Observable {
         notifyObservers();
 
         return true;
+    }
+
+    private boolean checkIsEnteredDataCorrect(boolean repeatable, String taskTitle, Date startDate, Date endDate) {
+
+        //check: is title empty
+        if (taskTitle.compareTo("") == 0) {
+            Alerts.showInformationAlert("You must enter a title!");
+            return false;
+        }
+
+        //check: are values in time spinners correct
+        if (repeatable) {
+            if (!repeatableTimeSpinnersCheck()) return false;
+        } else {
+            if (!unrepeatableTimeSpinnersCheck()) return false;
+        }
+
+        /*
+            check: is "start time" or "time" is less then current (real) time
+            check: is interval equal zero
+        */
+        return checkIsTimeCorrect(repeatable, startDate, endDate);
+    }
+
+    private boolean checkIsTimeCorrect(boolean repeatable, Date startDate, Date endDate) {
+        if (repeatable && checkIsIntervalZero()) {
+            return false;
+        }
+
+        if (repeatable && startDate.compareTo(endDate) >= 0) {
+            Alerts.showInformationAlert("End time can not be earlier than or equal to the start time!");
+            return false;
+        }
+
+        if (repeatable) {
+            if (compareCurrentTimeTo(endDatePicker, endHoursSpinner, endMinutesSpinner, "End time") == -1) {
+                return false;
+            }
+        } else {
+            if (compareCurrentTimeTo(timeDatePicker, timeHoursSpinner, timeMinutesSpinner, "Time") == -1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkIsIntervalZero() {
+        int intervalDays = getIntFromSpinner(daysSpinner);
+        int intervalHours = getIntFromSpinner(hoursSpinner);
+        int intervalMinutes = getIntFromSpinner(minutesSpinner);
+        int intervalSeconds = getIntFromSpinner(secondsSpinner);
+
+        //check: is interval equals 0
+        if (intervalDays == 0
+                && intervalHours == 0
+                && intervalMinutes == 0
+                && intervalSeconds == 0
+                ) {
+            Alerts.showInformationAlert("Interval can't be 0 if task is repeatable!");
+            return true;
+        }
+
+        return false;
     }
 
     @SuppressWarnings({"unchecked", "unused"})
@@ -350,8 +374,8 @@ public class AddEditController extends Observable {
     private Date getDateFromPickerAndSpinners(DatePicker datePicker, Spinner hoursSpinner, Spinner minutesSpinner) {
         return new Date(
                 Date.from(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime()
-                        + Integer.parseInt(hoursSpinner.getEditor().getText() + "") * HOUR_IN_MIL_SECONDS
-                        + Integer.parseInt(minutesSpinner.getEditor().getText() + "") * MINUTE_IN_MIL_SECONDS);
+                        + getIntFromSpinner(hoursSpinner) * HOUR_IN_MIL_SECONDS
+                        + getIntFromSpinner(minutesSpinner) * MINUTE_IN_MIL_SECONDS);
 
     }
 
@@ -367,7 +391,7 @@ public class AddEditController extends Observable {
     }
 
     private int getIntFromSpinner(Spinner spinner) {
-        return Integer.parseInt(spinner.getEditor().getText() + "");
+        return Integer.parseInt(spinner.getEditor().getText());
     }
 
     private void substituteData(int taskId) {
@@ -400,16 +424,16 @@ public class AddEditController extends Observable {
 
             int interval = task.getRepeatInterval();
 
-            daysSpinner.getEditor().setText(interval / DAY_IN_SECONDS + "");
+            daysSpinner.getEditor().setText(String.valueOf(interval / DAY_IN_SECONDS));
             interval = interval % DAY_IN_SECONDS;
 
-            hoursSpinner.getEditor().setText(interval / HOUR_IN_SECONDS + "");
+            hoursSpinner.getEditor().setText(String.valueOf(interval / HOUR_IN_SECONDS));
             interval = interval % HOUR_IN_SECONDS;
 
-            minutesSpinner.getEditor().setText(interval / MINUTE_IN_SECONDS + "");
+            minutesSpinner.getEditor().setText(String.valueOf(interval / MINUTE_IN_SECONDS));
             interval = interval % MINUTE_IN_SECONDS;
 
-            secondsSpinner.getEditor().setText(interval + "");
+            secondsSpinner.getEditor().setText(String.valueOf(interval));
 
         } else {
             repeat.selectToggle(unRepeatableRadioButton);
@@ -427,20 +451,20 @@ public class AddEditController extends Observable {
         long timeOfStartTime = date.getTime()
                 - Date.from(datePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()).getTime();
 
-        hoursSpinner.getEditor().setText(timeOfStartTime / HOUR_IN_MIL_SECONDS + "");
+        hoursSpinner.getEditor().setText(String.valueOf(timeOfStartTime / HOUR_IN_MIL_SECONDS));
         timeOfStartTime = timeOfStartTime % HOUR_IN_MIL_SECONDS;
 
-        minutesSpinner.getEditor().setText(timeOfStartTime / MINUTE_IN_MIL_SECONDS + "");
+        minutesSpinner.getEditor().setText(String.valueOf(timeOfStartTime / MINUTE_IN_MIL_SECONDS));
     }
 
     private boolean unrepeatableTimeSpinnersCheck() {
         try {
-            if (Integer.parseInt(timeHoursSpinner.getEditor().getText() + "") < 0 ||
-                    Integer.parseInt(timeHoursSpinner.getEditor().getText() + "") > HOURS_MAX_VALUE) {
+            if (getIntFromSpinner(timeHoursSpinner) < 0 ||
+                    getIntFromSpinner(timeHoursSpinner) > HOURS_MAX_VALUE) {
                 throw new NumberFormatException("time hours spinner");
             }
-            if (Integer.parseInt(timeMinutesSpinner.getEditor().getText() + "") < 0 ||
-                    Integer.parseInt(timeMinutesSpinner.getEditor().getText() + "") > MINUTES_MAX_VALUE) {
+            if (getIntFromSpinner(timeMinutesSpinner) < 0 ||
+                    getIntFromSpinner(timeMinutesSpinner) > MINUTES_MAX_VALUE) {
                 throw new NumberFormatException("time minutes spinner");
             }
         } catch (NumberFormatException exception) {
@@ -452,38 +476,14 @@ public class AddEditController extends Observable {
 
     private boolean repeatableTimeSpinnersCheck() {
         try {
-            if (Integer.parseInt(startHoursSpinner.getEditor().getText() + "") < 0 ||
-                    Integer.parseInt(startHoursSpinner.getEditor().getText() + "") > HOURS_MAX_VALUE) {
-                throw new NumberFormatException("start time hours spinner");
-            }
-            if (Integer.parseInt(startMinutesSpinner.getEditor().getText() + "") < 0 ||
-                    Integer.parseInt(startMinutesSpinner.getEditor().getText() + "") > MINUTES_MAX_VALUE) {
-                throw new NumberFormatException("start time minutes spinner");
-            }
-            if (Integer.parseInt(endHoursSpinner.getEditor().getText() + "") < 0 ||
-                    Integer.parseInt(endHoursSpinner.getEditor().getText() + "") > HOURS_MAX_VALUE) {
-                throw new NumberFormatException("end time hours spinner");
-            }
-            if (Integer.parseInt(endMinutesSpinner.getEditor().getText() + "") < 0 ||
-                    Integer.parseInt(endMinutesSpinner.getEditor().getText() + "") > MINUTES_MAX_VALUE) {
-                throw new NumberFormatException("end time minutes spinner");
-            }
-            if (Integer.parseInt(daysSpinner.getEditor().getText() + "") < 0 ||
-                    Integer.parseInt(daysSpinner.getEditor().getText() + "") > 30) {
-                throw new NumberFormatException("interval days spinner");
-            }
-            if (Integer.parseInt(hoursSpinner.getEditor().getText() + "") < 0 ||
-                    Integer.parseInt(hoursSpinner.getEditor().getText() + "") > HOURS_MAX_VALUE) {
-                throw new NumberFormatException("interval hours spinner");
-            }
-            if (Integer.parseInt(minutesSpinner.getEditor().getText() + "") < 0 ||
-                    Integer.parseInt(minutesSpinner.getEditor().getText() + "") > MINUTES_MAX_VALUE) {
-                throw new NumberFormatException("interval minutes spinner");
-            }
-            if (Integer.parseInt(secondsSpinner.getEditor().getText() + "") < 0 ||
-                    Integer.parseInt(secondsSpinner.getEditor().getText() + "") > 59) {
-                throw new NumberFormatException("interval seconds spinner");
-            }
+            checkSpinner(startHoursSpinner, HOURS_MAX_VALUE, "start time hours spinner");
+            checkSpinner(startMinutesSpinner, MINUTES_MAX_VALUE, "start time minutes spinner");
+            checkSpinner(endHoursSpinner, HOURS_MAX_VALUE, "end time hours spinner");
+            checkSpinner(endMinutesSpinner, MINUTES_MAX_VALUE, "end time minutes spinner");
+            checkSpinner(daysSpinner, 30, "interval days spinner");
+            checkSpinner(hoursSpinner, HOURS_MAX_VALUE, "interval hours spinner");
+            checkSpinner(minutesSpinner, MINUTES_MAX_VALUE, "interval minutes spinner");
+            checkSpinner(secondsSpinner, 59, "interval seconds spinner");
         } catch (NumberFormatException exception) {
             Alerts.showInformationAlert("You have entered a wrong value in one of the time spinners");
             return false;
@@ -491,23 +491,30 @@ public class AddEditController extends Observable {
         return true;
     }
 
+    private void checkSpinner(Spinner spinner, int maxValue, String exceptionMassage) {
+        if (getIntFromSpinner(spinner) < 0 ||
+                getIntFromSpinner(spinner) > maxValue) {
+            throw new NumberFormatException(exceptionMassage);
+        }
+    }
+
     private Task getRepeatableTaskFromInputFields(String title) {
         int interval;
-        interval = Integer.parseInt(daysSpinner.getEditor().getText() + "") * DAY_IN_SECONDS
-                + Integer.parseInt(hoursSpinner.getEditor().getText() + "") * HOUR_IN_SECONDS
-                + Integer.parseInt(minutesSpinner.getEditor().getText() + "") * MINUTE_IN_SECONDS
-                + Integer.parseInt(secondsSpinner.getEditor().getText() + "");
+        interval = getIntFromSpinner(daysSpinner) * DAY_IN_SECONDS
+                + getIntFromSpinner(hoursSpinner) * HOUR_IN_SECONDS
+                + getIntFromSpinner(minutesSpinner) * MINUTE_IN_SECONDS
+                + getIntFromSpinner(secondsSpinner);
 
         Date startDate = Date.from(startDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
         Date endDate = Date.from(endDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
 
         startDate = new Date(startDate.getTime()
-                + Integer.parseInt(startHoursSpinner.getEditor().getText() + "") * HOUR_IN_MIL_SECONDS
-                + Integer.parseInt(startMinutesSpinner.getEditor().getText() + "") * MINUTE_IN_MIL_SECONDS
+                + getIntFromSpinner(startHoursSpinner) * HOUR_IN_MIL_SECONDS
+                + getIntFromSpinner(startMinutesSpinner) * MINUTE_IN_MIL_SECONDS
         );
         endDate = new Date(endDate.getTime()
-                + Integer.parseInt(endHoursSpinner.getEditor().getText() + "") * HOUR_IN_MIL_SECONDS
-                + Integer.parseInt(endMinutesSpinner.getEditor().getText() + "") * MINUTE_IN_MIL_SECONDS
+                + getIntFromSpinner(endHoursSpinner) * HOUR_IN_MIL_SECONDS
+                + getIntFromSpinner(endMinutesSpinner) * MINUTE_IN_MIL_SECONDS
         );
 
         return new Task(title, startDate, endDate, interval);

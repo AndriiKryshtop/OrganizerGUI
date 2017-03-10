@@ -17,8 +17,11 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
+/**
+ * Controller class for Calendar dialog
+ */
 @SuppressWarnings({"CanBeFinal", "unused"})
-public class CalendarController{
+public class CalendarController {
     private final ObservableList<Task> calendarTaskList = FXCollections.observableArrayList();
 
     @FXML
@@ -78,7 +81,7 @@ public class CalendarController{
                     }
                 };
         toDatePicker.setDayCellFactory(dayCellFactory);
-        fromDatePicker.valueProperty().addListener((ov, oldValue, newValue) ->
+        fromDatePicker.valueProperty().addListener((observableValue, oldValue, newValue) ->
                 toDatePicker.setValue(newValue.plusDays(1)));
 
         formCalendarList(Date.from(fromDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()),
@@ -104,9 +107,9 @@ public class CalendarController{
         });
     }
 
-    private void formCalendarList(Date from, Date to) {
+    private void formCalendarList(Date fromDate, Date toDate) {
         calendarTaskList.clear();
-        SortedMap<Date, Set<Task>> sortedMap = Tasks.calendar(MainApp.getTaskData(), from, to);
+        SortedMap<Date, Set<Task>> sortedMap = Tasks.calendar(MainApp.getTaskData(), fromDate, toDate);
         for (int i = 0; i < sortedMap.values().size(); i++) {
             for (Map.Entry<Date, Set<Task>> entry : sortedMap.entrySet()) {
                 for (Object object : entry.getValue().toArray()) {
@@ -117,17 +120,17 @@ public class CalendarController{
     }
 
     private void showTaskDetails(Task task) {
-        if (task != null) {
+        if (task == null) {
+            titleLabel.setText("");
+            startTimeLabel.setText("");
+            endTimeLabel.setText("");
+            intervalLabel.setText("");
+        } else {
             titleLabel.setText(task.getTitle());
             startTimeLabel.setText(task.getStartTime().toString());
             endTimeLabel.setText(task.getEndTime().toString());
             intervalLabel.setText(Integer.toString(task.getRepeatInterval()));
 
-        } else {
-            titleLabel.setText("");
-            startTimeLabel.setText("");
-            endTimeLabel.setText("");
-            intervalLabel.setText("");
         }
     }
 }

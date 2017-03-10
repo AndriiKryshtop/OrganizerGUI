@@ -6,6 +6,9 @@ import javafx.stage.Modality;
 
 import java.util.Optional;
 
+/**
+ * Class for making simple dialogs
+ */
 public class Alerts {
 
     public static void showWarningAlert(String contentText) {

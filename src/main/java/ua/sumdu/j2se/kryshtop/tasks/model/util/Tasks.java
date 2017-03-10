@@ -38,12 +38,12 @@ public class Tasks {
             }
 
             while (task.nextTimeAfter(bufferDate).compareTo(end) != 1) {
-                if (!sortedMap.containsKey(task.nextTimeAfter(bufferDate))) {
+                if (sortedMap.containsKey(task.nextTimeAfter(bufferDate))) {
+                    sortedMap.get(task.nextTimeAfter(bufferDate)).add(task);
+                } else {
                     Set<Task> set = new HashSet<>();
                     set.add(task);
                     sortedMap.put(task.nextTimeAfter(bufferDate), set);
-                } else {
-                    sortedMap.get(task.nextTimeAfter(bufferDate)).add(task);
                 }
 
                 //in order not to get an NullPointerException in nextTimeAfter()

@@ -10,9 +10,12 @@ import ua.sumdu.j2se.kryshtop.tasks.view.Alerts;
 
 import java.util.*;
 
+/**
+ * Notification system class
+ */
 public class NotificationSystem implements Observer {
 
-    private static final Logger logger = LoggerFactory.getLogger(MainApp.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainApp.class);
 
     private static final int MIL_SECONDS_IN_SECOND = 1000;
 
@@ -38,17 +41,17 @@ public class NotificationSystem implements Observer {
     private void runNotificationThread() {
         try {
             //noinspection InfiniteLoopStatement
-            while(true) {
+            while (true) {
 
                 //update scheduled tasks
                 scheduledTasks = Tasks.calendar(MainApp.getTaskData(), new Date(), dateMaxValue);
 
-                if (scheduledTasks.isEmpty()){
+                if (scheduledTasks.isEmpty()) {
                     Thread.sleep(MIL_SECONDS_IN_SECOND);
                     continue;
                 }
 
-                if (alreadyNotifiedDate != null){
+                if (alreadyNotifiedDate != null) {
                     scheduledTasks.remove(alreadyNotifiedDate);
                     alreadyNotifiedDate = null;
                 }
@@ -58,7 +61,7 @@ public class NotificationSystem implements Observer {
                 notifyingUser();
             }
         } catch (InterruptedException exception) {
-            logger.error("Notification system error. Get an exception:\n" + exception.toString());
+            LOGGER.error("Notification system error. Get an exception:\n" + exception.toString());
             Alerts.showErrorAlert("Notification system error. Please restart program to be notified.");
         }
 

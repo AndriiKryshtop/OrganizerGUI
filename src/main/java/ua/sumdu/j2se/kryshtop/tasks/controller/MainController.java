@@ -22,10 +22,13 @@ import ua.sumdu.j2se.kryshtop.tasks.view.Alerts;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * Controller class for main dialog
+ */
 @SuppressWarnings({"CanBeFinal", "unused"})
 public class MainController extends Observable {
 
-    private static final Logger logger = LoggerFactory.getLogger(MainApp.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainApp.class);
 
     private static List<Observer> observers = new ArrayList<>();
 
@@ -79,27 +82,68 @@ public class MainController extends Observable {
 
         mainTable.setItems(MainApp.getTaskData());
 
-        calendarButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                try {
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/Calendar.fxml"));
-                    Parent root = fxmlLoader.load();
+        initializeCalendarButton();
+        initializeAddButton();
+        initializeEditButton();
+        initializeDeleteButton();
+    }
 
-                    Stage stage = new Stage();
-                    stage.setScene(new Scene(root, 712, 405));
+    private void initializeDeleteButton() {
+        deleteButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+            int selectedIndex = mainTable.getSelectionModel().getSelectedIndex();
 
-                    stage.setTitle("Calendar");
-                    stage.setResizable(false);
-                    stage.initModality(Modality.APPLICATION_MODAL);
-                    stage.show();
-                } catch (IOException ioException) {
-                    logger.error("Can't load Calendar.fxml. Get an exception" + ioException.toString());
-                    Alerts.showErrorAlert("Can't load Calendar.fxml! \n You can watch details in log.");
+            if (selectedIndex == -1) {
+                Alerts.showInformationAlert("Choose task before pressing \"delete\" button!");
+            } else {
+                if (Alerts.showConfirmationDialog("Are you really wont to delete this task?",
+                        MainApp.getTaskData().get(selectedIndex).toString())
+                        ) {
+                    MainApp.getTaskData().remove(selectedIndex);
+
+                    notifyObservers();
                 }
             }
         });
+    }
 
+    private void initializeEditButton() {
+        editButton.addEventHandler(
+                MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        if (mainTable.getSelectionModel().getSelectedIndex() == -1) {
+                            Alerts.showInformationAlert("Choose task before pressing \"edit\" button!");
+                        } else {
+                            AddEditController.taskId = mainTable.getSelectionModel().getSelectedIndex();
+                            try {
+                                FXMLLoader fxmlLoader =
+                                        new FXMLLoader(getClass().getResource("/fxml/AddEdit.fxml"));
+
+                                Parent root = fxmlLoader.load();
+
+                                Stage stage = new Stage();
+                                stage.setScene(new Scene(root, 494, 332));
+
+                                AddEditController.taskId = mainTable.getSelectionModel().getSelectedIndex();
+
+                                stage.setTitle("Edit task");
+                                stage.setResizable(false);
+                                stage.initModality(Modality.APPLICATION_MODAL);
+                                stage.show();
+                            } catch (IOException ioException) {
+                                LOGGER.error("Can't load AddEdit.fxml. Get an exception:\n"
+                                        + ioException.toString());
+
+                                Alerts.showErrorAlert("Could not find file AddEdit.fxml! " +
+                                        "\n You can watch details in log.");
+                            }
+                        }
+
+                    }
+                });
+    }
+
+    private void initializeAddButton() {
         addNewTaskButton.addEventHandler(
                 MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                     @Override
@@ -119,62 +163,34 @@ public class MainController extends Observable {
                             stage.initModality(Modality.APPLICATION_MODAL);
                             stage.show();
                         } catch (IOException ioException) {
-                            logger.error("Can't load AddEdit.fxml" + ioException.toString());
+                            LOGGER.error("Can't load AddEdit.fxml" + ioException.toString());
 
                             Alerts.showErrorAlert("Can't load AddEdit.fxml! " +
                                     "\n You can watch details in log.");
                         }
                     }
                 });
+    }
 
-        editButton.addEventHandler(
-                MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-                    @Override
-                    public void handle(MouseEvent mouseEvent) {
-                        if (mainTable.getSelectionModel().getSelectedIndex() != -1) {
-                            AddEditController.taskId = mainTable.getSelectionModel().getSelectedIndex();
-                            try {
-                                FXMLLoader fxmlLoader =
-                                        new FXMLLoader(getClass().getResource("/fxml/AddEdit.fxml"));
+    private void initializeCalendarButton() {
+        calendarButton.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                try {
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/Calendar.fxml"));
+                    Parent root = fxmlLoader.load();
 
-                                Parent root = fxmlLoader.load();
+                    Stage stage = new Stage();
+                    stage.setScene(new Scene(root, 712, 405));
 
-                                Stage stage = new Stage();
-                                stage.setScene(new Scene(root, 494, 332));
-
-                                AddEditController.taskId = mainTable.getSelectionModel().getSelectedIndex();
-
-                                stage.setTitle("Edit task");
-                                stage.setResizable(false);
-                                stage.initModality(Modality.APPLICATION_MODAL);
-                                stage.show();
-                            } catch (IOException ioException) {
-                                logger.error("Can't load AddEdit.fxml. Get an exception:\n"
-                                        + ioException.toString());
-
-                                Alerts.showErrorAlert("Could not find file AddEdit.fxml! " +
-                                        "\n You can watch details in log.");
-                            }
-                        } else {
-                            Alerts.showInformationAlert("Choose task before pressing \"edit\" button!");
-                        }
-
-                    }
-                });
-
-        deleteButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-            int selectedIndex = mainTable.getSelectionModel().getSelectedIndex();
-
-            if (selectedIndex != -1) {
-                if (Alerts.showConfirmationDialog("Are you really wont to delete this task?",
-                        MainApp.getTaskData().get(selectedIndex).toString())
-                        ) {
-                    MainApp.getTaskData().remove(selectedIndex);
-
-                    notifyObservers();
+                    stage.setTitle("Calendar");
+                    stage.setResizable(false);
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.show();
+                } catch (IOException ioException) {
+                    LOGGER.error("Can't load Calendar.fxml. Get an exception" + ioException.toString());
+                    Alerts.showErrorAlert("Can't load Calendar.fxml! \n You can watch details in log.");
                 }
-            } else {
-                Alerts.showInformationAlert("Choose task before pressing \"delete\" button!");
             }
         });
     }

@@ -7,7 +7,7 @@ import ua.sumdu.j2se.kryshtop.tasks.model.exceptions.NullTaskException;
 import java.util.Iterator;
 
 @SuppressWarnings("unused")
-public class LinkedTaskList extends TaskList {
+class LinkedTaskList extends TaskList implements Cloneable {
     private Node first;
     private Node last;
 
