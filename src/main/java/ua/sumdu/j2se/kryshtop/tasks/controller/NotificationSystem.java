@@ -25,7 +25,6 @@ public class NotificationSystem implements Observer {
     private Date alreadyNotifiedDate;
 
     public void startNotificationSystem() {
-
         AddEditController.addObserverStatic(this);
         MainController.addObserverStatic(this);
 
