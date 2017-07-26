@@ -8,7 +8,8 @@ import java.io.Serializable;
 
 @SuppressWarnings("unused")
 public abstract class TaskList implements Iterable<Task>, Cloneable, Serializable {
-    int size;
+    @SuppressWarnings("WeakerAccess")
+    protected int size;
 
     public abstract void add(Task task) throws NullTaskException;
 

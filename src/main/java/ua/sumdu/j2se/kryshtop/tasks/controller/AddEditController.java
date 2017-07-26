@@ -20,7 +20,7 @@ import java.util.*;
 public class AddEditController extends Observable {
     private static List<Observer> observers = new ArrayList<>();
 
-    static int taskId;
+    private static int taskId;
 
     @FXML
     private TextField title;
@@ -104,6 +104,11 @@ public class AddEditController extends Observable {
     private static final int MINUTES_DEFAULT_VALUE = 30;
     private static final int SECONDS_DEFAULT_VALUE = 30;
     private static final int DAYS_DEFAULT_VALUE = 30;
+
+    @SuppressWarnings("WeakerAccess")
+    protected static void setTaskId(int taskId) {
+        AddEditController.taskId = taskId;
+    }
 
     @FXML
     public void initialize() {
@@ -379,7 +384,8 @@ public class AddEditController extends Observable {
 
     }
 
-    static void addObserverStatic(Observer observer) {
+    @SuppressWarnings("WeakerAccess")
+    protected static void addObserverStatic(Observer observer) {
         observers.add(observer);
     }
 

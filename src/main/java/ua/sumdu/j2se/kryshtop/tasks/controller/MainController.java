@@ -114,7 +114,7 @@ public class MainController extends Observable {
                         if (mainTable.getSelectionModel().getSelectedIndex() == -1) {
                             Alerts.showInformationAlert("Choose task before pressing \"edit\" button!");
                         } else {
-                            AddEditController.taskId = mainTable.getSelectionModel().getSelectedIndex();
+                            AddEditController.setTaskId(mainTable.getSelectionModel().getSelectedIndex());
                             try {
                                 FXMLLoader fxmlLoader =
                                         new FXMLLoader(getClass().getResource("/fxml/AddEdit.fxml"));
@@ -124,7 +124,7 @@ public class MainController extends Observable {
                                 Stage stage = new Stage();
                                 stage.setScene(new Scene(root, 494, 332));
 
-                                AddEditController.taskId = mainTable.getSelectionModel().getSelectedIndex();
+                                AddEditController.setTaskId(mainTable.getSelectionModel().getSelectedIndex());
 
                                 stage.setTitle("Edit task");
                                 stage.setResizable(false);
@@ -148,7 +148,7 @@ public class MainController extends Observable {
                 MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
-                        AddEditController.taskId = -1;
+                        AddEditController.setTaskId(-1);
                         try {
                             FXMLLoader fxmlLoader =
                                     new FXMLLoader(getClass().getResource("/fxml/AddEdit.fxml"));
@@ -195,7 +195,8 @@ public class MainController extends Observable {
         });
     }
 
-    static void addObserverStatic(Observer observer) {
+    @SuppressWarnings("WeakerAccess")
+    protected static void addObserverStatic(Observer observer) {
         observers.add(observer);
     }
 

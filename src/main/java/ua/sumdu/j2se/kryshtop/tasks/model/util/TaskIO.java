@@ -128,6 +128,8 @@ public class TaskIO {
                                     case 3:
                                         interval += Integer.parseInt(intervalStringArray[i]);
                                         break;
+                                    default:
+                                        throw new IOException("Can't to recognize data in the file.");
                                 }
                                 break;
                             }
